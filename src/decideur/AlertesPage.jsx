@@ -3,6 +3,7 @@ import { apiGet, apiPost } from "../shared/apiClient";
 import { getStatusColor } from "../shared/statusStyles";
 import { formaterTempsRelatif } from "../shared/timeFormat";
 import { useSiteSelection } from "../shared/SiteSelectionContext";
+import ErrorBanner from "../shared/ErrorBanner";
 import DecideurLayout from "./DecideurLayout";
 
 const CLE_LUS = "resina-alertes-lues";
@@ -87,7 +88,7 @@ function AlertesPage() {
 
   return (
     <DecideurLayout>
-      {erreur && <p style={{ color: "var(--color-ko)" }}>Erreur : {erreur}</p>}
+      <ErrorBanner message={erreur} onRetry={charger} />
 
       {!alertesActivees && banniereVisible && (
         <div className="alert-banner">

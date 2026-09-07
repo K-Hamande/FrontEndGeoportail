@@ -4,6 +4,7 @@ import { adminGet, adminPost, adminDelete } from "../shared/backofficeApiClient"
 import UserFormModal from "./UserFormModal";
 import ResetPasswordModal from "./ResetPasswordModal";
 import Topbar from "./Topbar";
+import ErrorBanner from "../shared/ErrorBanner";
 
 // Palette alignee sur la page Roles - meme code couleur pour que
 // l'identite visuelle d'un role soit reconnaissable d'une page a l'autre.
@@ -98,7 +99,7 @@ function UsersPage() {
       <Topbar title="Utilisateurs" subtitle="Comptes administrateurs DEST/DIG" onRefresh={charger} chargement={chargement} />
 
       <div className="backoffice-content">
-        {erreur && <p style={{ color: "var(--bo-ko)" }}>Erreur : {erreur}</p>}
+        <ErrorBanner message={erreur} onRetry={charger} />
 
         {!chargement && (
           <div className="kpi-grid-v2" style={{ marginBottom: "20px" }}>

@@ -3,6 +3,7 @@ import { useAuth } from "../shared/AuthContext";
 import { adminGet, adminPost, adminPut } from "../shared/backofficeApiClient";
 import { useOutletContext } from "react-router-dom";
 import SearchableSelect from "../shared/SearchableSelect";
+import ErrorBanner from "../shared/ErrorBanner";
 
 const TYPE_LABELS = {
   BORNE_WIFI: "Borne Wi-Fi", COMMUTATEUR: "Commutateur (Switch)",
@@ -276,7 +277,7 @@ function EquipmentsPage() {
       </div>
 
       <div className="backoffice-content dashboard-content">
-        {erreur && <p style={{ color: "var(--bo-ko)" }}>Erreur : {erreur}</p>}
+        <ErrorBanner message={erreur} onRetry={chargerStats} />
         {messageSync && <p style={{ color: "var(--bo-ok)" }}>{messageSync}</p>}
 
         {/* Stats par type */}

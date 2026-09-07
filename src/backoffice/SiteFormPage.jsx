@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import "bootstrap/dist/css/bootstrap.min.css";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import { useAuth } from "../shared/AuthContext";
 import { adminGet, adminPost } from "../shared/backofficeApiClient";
 import SearchableSelect from "../shared/SearchableSelect";
+import ErrorBanner from "../shared/ErrorBanner";
 
 const TYPE_LABELS = { BORNE_WIFI: "Borne Wi-Fi", COMMUTATEUR: "Commutateur" };
 
@@ -107,22 +107,27 @@ function SiteFormPage() {
 
   return (
     <div className="backoffice-content">
-      <Link to="/backoffice/sites" className="btn btn-info">← Retour à la liste</Link>
+      <Link to="/backoffice/sites" className="site-form-back">← Retour à la liste</Link>
 
-      <h1 style={{ marginTop: "12px" }}>{isEdition ? "Modifier un site" : "Créer un site"}</h1>
-      <p className="page-subtitle">
-        {isEdition ? `${form.nom} — ${form.ville}` : "Nouveau bâtiment institutionnel connecté au RESINA"}
-      </p>
+      <div className="site-form-hero">
+        <span className="site-form-hero-icon">🏢</span>
+        <div>
+          <div className="site-form-hero-title">{isEdition ? "Modifier un site" : "Créer un site"}</div>
+          <div className="site-form-hero-sub">
+            {isEdition ? `${form.nom} — ${form.ville}` : "Nouveau bâtiment institutionnel connecté au RESINA"}
+          </div>
+        </div>
+      </div>
 
       <div className="info-banner">
         ℹ️ Les informations saisies ici complètent les données collectées automatiquement par NetXMS. Elles ne modifient pas NetXMS.
       </div>
 
-      {erreur && <p style={{ color: "var(--color-ko)" }}>Erreur : {erreur}</p>}
+      <ErrorBanner message={erreur} />
 
       <form onSubmit={handleSubmit}>
         <div className="panel">
-          <h2 style={{ fontSize: "15px", marginBottom: "16px" }}>Identification du site</h2>
+          <h2 className="site-form-section-title"><span className="icon-badge">🏷</span>Identification du site</h2>
 
           <div className="form-grid">
             <div className="form-field">
@@ -185,7 +190,7 @@ function SiteFormPage() {
 
         {isEdition && (
           <div className="panel">
-            <h2 style={{ fontSize: "15px", marginBottom: "16px" }}>Équipements LAN par étage</h2>
+            <h2 className="site-form-section-title"><span className="icon-badge">🔌</span>Équipements LAN par étage</h2>
 
             {recapitulatifExistant.length > 0 ? (
               <table className="admin-table" style={{ marginBottom: "16px" }}>

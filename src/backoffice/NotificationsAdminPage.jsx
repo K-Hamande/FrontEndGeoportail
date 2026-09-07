@@ -3,6 +3,7 @@ import { useAuth } from "../shared/AuthContext";
 import { adminGet, adminDelete } from "../shared/backofficeApiClient";
 import Topbar from "./Topbar";
 import SearchableSelect from "../shared/SearchableSelect";
+import ErrorBanner from "../shared/ErrorBanner";
 
 function NotificationsAdminPage() {
   const { getAuthHeader } = useAuth();
@@ -42,7 +43,7 @@ function NotificationsAdminPage() {
       <Topbar title="Notifications push" subtitle="Enregistrement et suppression des destinataires par site" onRefresh={charger} />
 
       <div className="backoffice-content">
-        {erreur && <p style={{ color: "var(--color-ko)" }}>Erreur : {erreur}</p>}
+        <ErrorBanner message={erreur} onRetry={charger} />
 
         <div className="panel">
           <div className="panel-header">

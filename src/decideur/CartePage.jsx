@@ -4,6 +4,7 @@ import { apiGet } from "../shared/apiClient";
 import { buildColoredMarkerIcon } from "../shared/mapMarkers";
 import { getStatusLabel } from "../shared/statusStyles";
 import { useSiteSelection } from "../shared/SiteSelectionContext";
+import ErrorBanner from "../shared/ErrorBanner";
 import DecideurLayout from "./DecideurLayout";
 
 const CENTRE_BURKINA_FASO = [12.2, -1.5];
@@ -48,7 +49,7 @@ function CartePage() {
 
   return (
     <DecideurLayout>
-      {erreur && <p style={{ color: "var(--color-ko)" }}>Erreur : {erreur}</p>}
+      <ErrorBanner message={erreur} onRetry={charger} />
 
       {/* Sur mobile/tablette : uniquement la carte, pleine largeur (comportement
           d'origine inchangé). A partir de 1024px, .map-layout devient un

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../shared/AuthContext";
 import { adminGet, adminPost } from "../shared/backofficeApiClient";
+import ErrorBanner from "../shared/ErrorBanner";
 import Topbar from "./Topbar";
 
 const ROLE_LABELS = {
@@ -68,7 +69,7 @@ function MonProfilPage() {
     <>
       <Topbar title="Mon profil" subtitle="Informations de votre compte et mot de passe" onRefresh={charger} />
       <div className="backoffice-content">
-        {erreur && <p style={{ color: "var(--bo-ko)" }}>Erreur : {erreur}</p>}
+        <ErrorBanner message={erreur} onRetry={charger} />
 
         <div className="panel">
           <div className="panel-header">

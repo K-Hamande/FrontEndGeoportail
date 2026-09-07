@@ -1,3 +1,5 @@
+import { construireErreurApi, erreurConnexionImpossible } from "./httpError";
+
 // Fonction generique : ajoute l'en-tete Authorization a chaque appel,
 // et centralise la gestion des erreurs HTTP - reutilisee par GET/POST/
 // PUT/DELETE ci-dessous plutot que de dupliquer cette logique 4 fois.
@@ -7,14 +9,19 @@ async function request(path, method, authHeader, body) {
     headers["Content-Type"] = "application/json";
   }
 
-  const response = await fetch(path, {
-    method,
-    headers,
-    body: body !== undefined ? JSON.stringify(body) : undefined,
-  });
+  let response;
+  try {
+    response = await fetch(path, {
+      method,
+      headers,
+      body: body !== undefined ? JSON.stringify(body) : undefined,
+    });
+  } catch {
+    throw erreurConnexionImpossible();
+  }
 
   if (!response.ok) {
-    throw new Error(`Erreur API (${response.status}) sur ${path}`);
+    throw await construireErreurApi(response);
   }
 
   // Certains endpoints (ex: deactivate) renvoient une reponse vide -
@@ -44,10 +51,15 @@ export function adminDelete(path, authHeader) {
 // Retourne le Blob tel quel ; c'est l'appelant qui declenche le
 // telechargement (voir declencherTelechargement ci-dessous).
 export async function adminGetFichier(path, authHeader) {
-  const response = await fetch(path, { headers: { Authorization: authHeader } });
+  let response;
+  try {
+    response = await fetch(path, { headers: { Authorization: authHeader } });
+  } catch {
+    throw erreurConnexionImpossible();
+  }
 
   if (!response.ok) {
-    throw new Error(`Erreur API (${response.status}) sur ${path}`);
+    throw await construireErreurApi(response);
   }
 
   const nomFichier = extraireNomFichier(response.headers.get("Content-Disposition"));

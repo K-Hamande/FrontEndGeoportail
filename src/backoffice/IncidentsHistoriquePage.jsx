@@ -3,6 +3,7 @@ import { useAuth } from "../shared/AuthContext";
 import { adminGet, adminGetFichier, declencherTelechargement } from "../shared/backofficeApiClient";
 import { formaterDureeMinutes } from "../shared/timeFormat";
 import SearchableSelect from "../shared/SearchableSelect";
+import ErrorBanner from "../shared/ErrorBanner";
 import Topbar from "./Topbar";
 
 const PERIODES = [
@@ -147,7 +148,7 @@ function IncidentsHistoriquePage() {
         onRefresh={charger}
       />
       <div className="backoffice-content">
-        {erreur && <p style={{ color: "var(--bo-ko)" }}>Erreur : {erreur}</p>}
+        <ErrorBanner message={erreur} onRetry={charger} />
 
         {/* Statistiques, calculées sur l'ensemble filtré (période/date, type,
             ministère, recherche) - indépendantes du filtre "état" et de la

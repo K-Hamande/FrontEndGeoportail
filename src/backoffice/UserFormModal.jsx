@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useAuth } from "../shared/AuthContext";
 import { adminGet, adminPost, adminPut } from "../shared/backofficeApiClient";
 import SearchableSelect from "../shared/SearchableSelect";
+import ErrorBanner from "../shared/ErrorBanner";
 
 // Sert a la fois pour la CREATION (userAModifier absent) et la
 // MODIFICATION (userAModifier fourni) - evite de dupliquer tout le
@@ -151,7 +152,7 @@ function UserFormModal({ userAModifier, onClose, onSaved }) {
             </div>
           )}
 
-          {erreur && <p style={{ color: "var(--color-ko)" }}>Erreur : {erreur}</p>}
+          <ErrorBanner message={erreur} />
 
           <div className="modal-actions">
             <button type="button" className="btn-secondary" onClick={onClose}>Annuler</button>

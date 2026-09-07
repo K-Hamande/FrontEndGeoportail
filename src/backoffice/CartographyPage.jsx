@@ -5,6 +5,7 @@ import { useOutletContext } from "react-router-dom";
 import { adminGet, adminPut } from "../shared/backofficeApiClient";
 import { buildColoredMarkerIcon } from "../shared/mapMarkers";
 import SearchableSelect from "../shared/SearchableSelect";
+import ErrorBanner from "../shared/ErrorBanner";
 
 const CENTRE_BURKINA_FASO = [12.2, -1.5];
 const TAILLE_PAGE = 20;
@@ -215,7 +216,7 @@ function CartographyPage() {
       </div>
 
       <div className="backoffice-content dashboard-content">
-        {erreur && <p style={{ color: "var(--bo-ko)" }}>Erreur : {erreur}</p>}
+        <ErrorBanner message={erreur} onRetry={charger} />
         {succes && <p style={{ color: "var(--bo-ok)" }}>{succes}</p>}
 
         {/* Barre de progression positionnement */}

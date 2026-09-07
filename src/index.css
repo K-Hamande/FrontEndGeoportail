@@ -220,6 +220,45 @@ body {
 .message-title { font-weight: 700; font-size: 13px; margin-bottom: 2px;color:#0D9B5A; }
 .message-text { font-size: 12px; color: var(--color-text-muted); }
 
+/* ---- BANDEAU D'ERREUR (ErrorBanner.jsx) : remplace le <p>Erreur : ...</p>
+   brut disperse dans les pages - donne du poids visuel a une vraie panne
+   (ex: backend injoignable) plutot qu'une ligne de texte rouge discrete. ---- */
+.error-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  background: #FCE8E8;
+  border: 1px solid #F5C6C6;
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin-bottom: 16px;
+}
+
+.error-banner-icon {
+  font-size: 18px;
+  flex-shrink: 0;
+  line-height: 1.3;
+}
+
+.error-banner-texts { flex: 1; min-width: 0; }
+.error-banner-title { font-weight: 700; font-size: 13px; color: var(--color-ko); }
+.error-banner-message { font-size: 12.5px; color: var(--color-text); margin-top: 2px; line-height: 1.4; }
+
+.error-banner-retry {
+  flex-shrink: 0;
+  background: white;
+  border: 1px solid #F5C6C6;
+  color: var(--color-ko);
+  font-weight: 600;
+  font-size: 12px;
+  padding: 7px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s;
+}
+.error-banner-retry:hover { background: #FDEAEA; }
+
 .metrics-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .metric-box { background: #F5F6F8; border-radius: 10px; padding: 10px 12px; }
 .metric-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.4px; color: var(--color-text-muted); margin-bottom: 4px; }
@@ -1840,6 +1879,12 @@ body {
 .backoffice-shell .badge-warn { background: #FDF1E0; color: var(--bo-warn); }
 .backoffice-shell .badge-ko { background: #FCE8E8; color: var(--bo-ko); }
 .backoffice-shell .badge-unknown { background: #EEF0F2; color: var(--bo-unknown); }
+
+/* ---- BANDEAU D'ERREUR (scope backoffice : police + tokens --bo-*) ---- */
+.backoffice-shell .error-banner { border-radius: 12px; }
+.backoffice-shell .error-banner-title { font-family: var(--bo-font-display); color: var(--bo-ko); }
+.backoffice-shell .error-banner-message { color: var(--bo-ink); }
+.backoffice-shell .error-banner-retry { color: var(--bo-ko); }
 
 /* ---- BARRE MOBILE ---- */
 .backoffice-shell .mobile-topbar {
@@ -4306,6 +4351,113 @@ body {
 
 @media (max-width: 600px) {
   .backoffice-shell .sup-hero { flex-direction: column; align-items: flex-start; }
+}
+
+/* ==================================================================
+   SITE FORM PAGE (creation/edition d'un site) — refonte visuelle
+   ================================================================== */
+
+.backoffice-shell .site-form-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--bo-ink-muted);
+  text-decoration: none;
+  padding: 6px 4px;
+  transition: color 0.15s;
+}
+.backoffice-shell .site-form-back:hover { color: var(--bo-primary); }
+
+.backoffice-shell .site-form-hero {
+  background: linear-gradient(135deg, var(--bo-primary) 0%, var(--bo-primary-deep) 100%);
+  border-radius: 16px;
+  padding: 22px 24px;
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 10px 0 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.backoffice-shell .site-form-hero::after {
+  content: "";
+  position: absolute;
+  right: -40px;
+  top: -60px;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.backoffice-shell .site-form-hero-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.backoffice-shell .site-form-hero-title {
+  font-family: var(--bo-font-display);
+  font-size: 20px;
+  font-weight: 700;
+  position: relative;
+}
+
+.backoffice-shell .site-form-hero-sub {
+  font-size: 12.5px;
+  opacity: 0.75;
+  margin-top: 2px;
+  position: relative;
+}
+
+.backoffice-shell .site-form-section-title {
+  font-family: var(--bo-font-display);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--bo-ink);
+  margin: 0 0 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.backoffice-shell .site-form-section-title .icon-badge {
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
+  background: var(--bo-primary-soft);
+  color: var(--bo-primary-deep);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+}
+
+.backoffice-shell .form-field input:disabled,
+.backoffice-shell .form-field select:disabled {
+  background: var(--bo-canvas);
+  color: var(--bo-ink-muted);
+  border-style: dashed;
+  cursor: not-allowed;
+}
+
+.backoffice-shell .form-footer-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 4px;
 }
 
 /* ==================================================================

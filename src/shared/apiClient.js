@@ -1,4 +1,5 @@
 import { getDecideurToken, clearDecideurAuth } from "./decideurAuth";
+import { construireErreurApi, erreurConnexionImpossible } from "./httpError";
 
 export async function apiGet(path) {
   const token = getDecideurToken();
@@ -15,7 +16,12 @@ export async function apiGet(path) {
     ? { Authorization: `Bearer ${token}` }
     : {};
 
-  const response = await fetch(path, { headers });
+  let response;
+  try {
+    response = await fetch(path, { headers });
+  } catch {
+    throw erreurConnexionImpossible();
+  }
 
   if (response.status === 401 && !estBackoffice) {
     clearDecideurAuth();
@@ -26,7 +32,7 @@ export async function apiGet(path) {
   }
 
   if (!response.ok) {
-    throw new Error(`Erreur API (${response.status}) sur ${path}`);
+    throw await construireErreurApi(response);
   }
 
   return response.json();
@@ -46,11 +52,16 @@ export async function apiPost(path, body) {
   const headers = { "Content-Type": "application/json" };
   if (token) headers.Authorization = `Bearer ${token}`;
 
-  const response = await fetch(path, {
-    method: "POST",
-    headers,
-    body: body !== undefined ? JSON.stringify(body) : undefined,
-  });
+  let response;
+  try {
+    response = await fetch(path, {
+      method: "POST",
+      headers,
+      body: body !== undefined ? JSON.stringify(body) : undefined,
+    });
+  } catch {
+    throw erreurConnexionImpossible();
+  }
 
   if (response.status === 401 && !estBackoffice) {
     clearDecideurAuth();
@@ -61,7 +72,7 @@ export async function apiPost(path, body) {
   }
 
   if (!response.ok) {
-    throw new Error(`Erreur API (${response.status}) sur ${path}`);
+    throw await construireErreurApi(response);
   }
 
   return response.status === 204 ? null : response.json();

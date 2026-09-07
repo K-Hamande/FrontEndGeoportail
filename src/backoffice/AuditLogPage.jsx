@@ -3,6 +3,7 @@ import { useAuth } from "../shared/AuthContext";
 import { adminGet } from "../shared/backofficeApiClient";
 import Topbar from "./Topbar";
 import SearchableSelect from "../shared/SearchableSelect";
+import ErrorBanner from "../shared/ErrorBanner";
 
 // Transforme "Xavier KIWALO" en "KIWALO X." (nom de famille en majuscules
 // + initiale du prenom), pour reprendre exactement le format d'affichage
@@ -210,7 +211,7 @@ function AuditLogPage() {
       />
 
       <div className="backoffice-content">
-        {erreur && <p style={{ color: "var(--bo-ko)" }}>Erreur : {erreur}</p>}
+        <ErrorBanner message={erreur} onRetry={charger} />
 
         {!chargement && (
           <>

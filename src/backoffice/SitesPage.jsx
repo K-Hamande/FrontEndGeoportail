@@ -3,6 +3,7 @@ import { Link, useOutletContext } from "react-router-dom";
 import { useAuth } from "../shared/AuthContext";
 import { adminGet, adminPost } from "../shared/backofficeApiClient";
 import SearchableSelect from "../shared/SearchableSelect";
+import ErrorBanner from "../shared/ErrorBanner";
 
 const TAILLE_PAGE = 20;
 
@@ -158,7 +159,7 @@ function SitesPage() {
       </div>
 
       <div className="backoffice-content dashboard-content">
-        {erreur && <p style={{ color: "var(--bo-ko)" }}>Erreur : {erreur}</p>}
+        <ErrorBanner message={erreur} onRetry={charger} />
 
         <div className="panel attention-panel">
           <div className="panel-header" style={{ flexWrap: "wrap", gap: "8px" }}>

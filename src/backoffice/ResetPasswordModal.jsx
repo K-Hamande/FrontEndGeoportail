@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useAuth } from "../shared/AuthContext";
 import { adminPost } from "../shared/backofficeApiClient";
+import ErrorBanner from "../shared/ErrorBanner";
 
 function ResetPasswordModal({ userId, onClose, onSaved }) {
   const { getAuthHeader } = useAuth();
@@ -39,7 +40,7 @@ function ResetPasswordModal({ userId, onClose, onSaved }) {
             />
           </div>
 
-          {erreur && <p style={{ color: "var(--color-ko)" }}>Erreur : {erreur}</p>}
+          <ErrorBanner message={erreur} />
 
           <div className="modal-actions">
             <button type="button" className="btn-secondary" onClick={onClose}>Annuler</button>

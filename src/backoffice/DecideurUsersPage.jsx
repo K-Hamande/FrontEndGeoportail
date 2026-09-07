@@ -4,6 +4,7 @@ import { adminGet, adminPost, adminPut, adminDelete } from "../shared/backoffice
 import { useOutletContext } from "react-router-dom";
 import Topbar from "./Topbar";
 import SearchableSelect from "../shared/SearchableSelect";
+import ErrorBanner from "../shared/ErrorBanner";
 
 const ROLE_LABELS = { DECIDEUR: "Décideur ministériel", LAMBDA: "Utilisateur lambda" };
 
@@ -76,7 +77,7 @@ function DecideurUsersPage() {
     <>
       <Topbar title="Comptes Décideurs" subtitle="Gestion des accès à l'interface décideur" onRefresh={charger} />
       <div className="backoffice-content">
-        {erreur && <p style={{ color: "var(--bo-ko)" }}>Erreur : {erreur}</p>}
+        <ErrorBanner message={erreur} onRetry={charger} />
 
         <div className="panel">
           <div className="panel-header">

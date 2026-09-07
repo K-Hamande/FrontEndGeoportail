@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { apiGet } from "../shared/apiClient";
+import ErrorBanner from "../shared/ErrorBanner";
 import LambdaLayout from "./LambdaLayout";
 
 const TAILLE_PAGE = 30;
@@ -11,15 +12,17 @@ function LambdaListePage() {
   const [chargement, setChargement] = useState(true);
   const [erreur, setErreur] = useState(null);
 
-  useEffect(() => {
+  function charger() {
+    setErreur(null);
     apiGet("/api/v1/sites/statut-simple")
       .then(setSites)
       .catch((e) => setErreur(e.message))
       .finally(() => setChargement(false));
+  }
 
-    const intervalle = setInterval(() => {
-      apiGet("/api/v1/sites/statut-simple").then(setSites).catch(() => {});
-    }, 60000);
+  useEffect(() => {
+    charger();
+    const intervalle = setInterval(charger, 60000);
     return () => clearInterval(intervalle);
   }, []);
 
@@ -66,7 +69,7 @@ function LambdaListePage() {
       </div>
 
       {chargement && <p style={{ textAlign: "center", padding: "40px" }}>Chargement...</p>}
-      {erreur && <p style={{ color: "#D93535", textAlign: "center" }}>Erreur : {erreur}</p>}
+      <ErrorBanner message={erreur} onRetry={charger} />
 
       <div className="lambda-sites-grid">
         {sitesPage.map((site) => (

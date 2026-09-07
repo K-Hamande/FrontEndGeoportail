@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate, useLocation, useOutletContext } from "react-router-dom";
 import { useAuth } from "../shared/AuthContext";
 import { adminGet } from "../shared/backofficeApiClient";
+import ErrorBanner from "../shared/ErrorBanner";
 
 function DashboardPage() {
   const { auth, setReduit, reduit } = useOutletContext();
@@ -161,7 +162,7 @@ function DashboardPage() {
       </div>
 
       <div className="backoffice-content dashboard-content">
-        {erreur && <p style={{ color: "var(--bo-ko)" }}>Erreur : {erreur}</p>}
+        <ErrorBanner message={erreur} onRetry={charger} />
 
         {/* KPI */}
         <div className="kpi-grid-v2">

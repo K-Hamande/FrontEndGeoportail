@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { apiGet } from "../shared/apiClient";
 import { useSiteSelection } from "../shared/SiteSelectionContext";
+import ErrorBanner from "../shared/ErrorBanner";
 import DecideurLayout from "./DecideurLayout";
 import UpdateBar from "./UpdateBar";
 import AnpticStatusCard from "./AnpticStatusCard";
@@ -50,7 +51,7 @@ function MonSitePage() {
   return (
     <DecideurLayout>
       <UpdateBar lastUpdated={lastUpdated} onRefresh={chargerStatuts} isLoading={isLoading} />
-      {erreur && <p style={{ color: "var(--color-ko)" }}>Erreur : {erreur}</p>}
+      <ErrorBanner message={erreur} onRetry={chargerStatuts} />
       <AnpticStatusCard data={anpticData} />
       <LanStatusCard data={lanData} />
     </DecideurLayout>
