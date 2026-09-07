@@ -1,4 +1,4 @@
-function UpdateBar({ lastUpdated, onRefresh }) {
+function UpdateBar({ lastUpdated, onRefresh, isLoading }) {
   const formatted = lastUpdated.toLocaleString("fr-FR", {
     day: "2-digit",
     month: "2-digit",
@@ -12,8 +12,9 @@ function UpdateBar({ lastUpdated, onRefresh }) {
       <span>
         Mis à jour : <strong>{formatted}</strong>
       </span>
-      <button className="btn-refresh" onClick={onRefresh}>
-        ↻ Actualiser
+      <button className="btn-refresh" onClick={onRefresh} disabled={isLoading}>
+        <span className={isLoading ? "btn-refresh-icon spinning" : "btn-refresh-icon"}>↻</span>
+        {isLoading ? "Actualisation..." : "Actualiser"}
       </button>
     </div>
   );

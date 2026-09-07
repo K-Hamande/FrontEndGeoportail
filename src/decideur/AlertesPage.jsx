@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import { apiGet, apiPost } from "../shared/apiClient";
 import { getStatusColor } from "../shared/statusStyles";
 import { formaterTempsRelatif } from "../shared/timeFormat";
+import { useSiteSelection } from "../shared/SiteSelectionContext";
 import DecideurLayout from "./DecideurLayout";
 
 const CLE_LUS = "resina-alertes-lues";
@@ -29,6 +29,7 @@ function badgeLabel(status) {
 }
 
 function AlertesPage() {
+  const { choisirSite } = useSiteSelection();
   const [incidents, setIncidents] = useState([]);
   const [erreur, setErreur] = useState(null);
   const [idsLus, setIdsLus] = useState(chargerIdsLus);
@@ -143,9 +144,16 @@ function AlertesPage() {
 
               <div className="alert-meta">
                 <span className="alert-time">{formaterTempsRelatif(incident.survenuLe)}</span>
-                <Link to={`/?site=${incident.siteId}`} className="alert-link" onClick={(e) => e.stopPropagation()}>
+                <button
+                  type="button"
+                  className="alert-link"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    choisirSite(incident.siteId);
+                  }}
+                >
                   Voir le détail →
-                </Link>
+                </button>
               </div>
             </div>
           );

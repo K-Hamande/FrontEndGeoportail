@@ -147,13 +147,13 @@ function RolesPage() {
           </div>
         </div>
 
-        <div className="roles-note">
+        {/* <div className="roles-note">
           <span className="roles-note-icon">ℹ️</span>
           <p>
             La gestion fine des permissions par rôle (au-delà de cette distinction) n'existe pas encore dans
             l'application — cette page sera complétée si un système de permissions configurables est mis en place.
           </p>
-        </div>
+        </div> */}
 
       </div>
     </>

@@ -1,9 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
-import { Link } from "react-router-dom";
 import { apiGet } from "../shared/apiClient";
 import { buildColoredMarkerIcon } from "../shared/mapMarkers";
 import { getStatusLabel } from "../shared/statusStyles";
+import { useSiteSelection } from "../shared/SiteSelectionContext";
 import DecideurLayout from "./DecideurLayout";
 
 const CENTRE_BURKINA_FASO = [12.2, -1.5];
@@ -17,6 +17,7 @@ function badgeClassFor(statut) {
 }
 
 function CartePage() {
+  const { choisirSite } = useSiteSelection();
   const [sites, setSites] = useState([]);
   const [erreur, setErreur] = useState(null);
   const [recherche, setRecherche] = useState("");
@@ -71,7 +72,9 @@ function CartePage() {
                 <br />
                 Statut : {getStatusLabel(site.statutGlobal)}
                 <br />
-                <Link to={`/?site=${site.siteId}`}>Voir ce site →</Link>
+                <button type="button" className="map-popup-link" onClick={() => choisirSite(site.siteId)}>
+                  Voir ce site →
+                </button>
               </Popup>
             </Marker>
           ))}
@@ -94,7 +97,12 @@ function CartePage() {
 
           <div className="map-sidebar-list">
             {sitesFiltres.map((site) => (
-              <Link key={site.siteId} to={`/?site=${site.siteId}`} className="map-site-item">
+              <button
+                type="button"
+                key={site.siteId}
+                onClick={() => choisirSite(site.siteId)}
+                className="map-site-item"
+              >
                 <div>
                   <div className="map-site-item-name">{site.nom}</div>
                   <div className="map-site-item-ville">{site.ville}</div>
@@ -102,7 +110,7 @@ function CartePage() {
                 <span className={`status-badge ${badgeClassFor(site.statutGlobal)}`}>
                   {getStatusLabel(site.statutGlobal)}
                 </span>
-              </Link>
+              </button>
             ))}
           </div>
         </div>

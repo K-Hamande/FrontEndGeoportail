@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useAuth } from "../shared/AuthContext";
 import { adminGet, adminPut, adminDelete } from "../shared/backofficeApiClient";
 import Topbar from "./Topbar";
-import SearchableSelect from "../shared/SearchableSelect";
 
 // §3.2.6b du CDC : configuration des parametres de supervision par site
 // (intervalle d'actualisation, seuils d'alerte, notifications push par
@@ -102,73 +101,188 @@ function SupervisionPage() {
       <Topbar title="Paramètres supervision" subtitle="Seuils d'alerte, intervalle d'actualisation et notifications par site" onRefresh={charger} />
 
       <div className="backoffice-content">
-        {erreur && <p style={{ color: "var(--color-ko)" }}>Erreur : {erreur}</p>}
-        {message && <p style={{ color: "var(--color-ok)" }}>{message}</p>}
+        {erreur && <p className="sup-message ko">⚠ Erreur : {erreur}</p>}
+        {message && <p className="sup-message ok">✓ {message}</p>}
 
-        <div className="panel">
-          <div className="panel-header">
-            <div className="form-field" style={{ maxWidth: "280px", marginBottom: 0 }}>
-              <label>Rechercher un site</label>
-              <input type="text" placeholder="Nom ou ville…" value={recherche} onChange={(e) => setRecherche(e.target.value)} />
+        <div className="sup-layout">
+          {/* ---- Colonne de gauche : recherche + liste de sites ---- */}
+          <div className="sup-picker">
+            <div className="sup-search">
+              <span className="sup-search-icon">🔍</span>
+              <input
+                type="text"
+                placeholder="Rechercher un site…"
+                value={recherche}
+                onChange={(e) => setRecherche(e.target.value)}
+              />
             </div>
-            <div className="form-field" style={{ maxWidth: "320px", marginBottom: 0 }}>
-              <label>Site ({sitesFiltres.length})</label>
-              <SearchableSelect value={siteId || ""} onChange={(e) => setSiteId(e.target.value)}>
-                {sitesFiltres.map((s) => (
-                  <option key={s.siteId} value={s.siteId}>{s.siteNom} — {s.ville}</option>
-                ))}
-              </SearchableSelect>
-            </div>
-          </div>
-
-          <div style={{ marginBottom: "16px" }}>
-            <span className={`status-badge ${brouillon.personnalise ? "badge-ok" : "badge-unknown"}`}>
-              {brouillon.personnalise ? "Paramètres personnalisés" : "Valeurs par défaut"}
-            </span>
-          </div>
-
-          <h2 style={{ fontSize: "15px", marginBottom: "12px" }}>Seuils et actualisation</h2>
-          <div className="form-grid">
-            <div className="form-field">
-              <label>Intervalle d'actualisation (secondes)</label>
-              <input type="number" min="10" value={brouillon.intervalleActualisationS} onChange={(e) => modifier("intervalleActualisationS", e.target.value)} />
-            </div>
-            <div className="form-field">
-              <label>Débit minimal acceptable (Mbps)</label>
-              <input type="number" step="0.1" min="0" value={brouillon.debitMinimalMbps} onChange={(e) => modifier("debitMinimalMbps", e.target.value)} />
-              <span className="field-hint">En dessous, la liaison est signalée « dégradée »</span>
-            </div>
-            <div className="form-field">
-              <label>Latence maximale acceptable (ms)</label>
-              <input type="number" step="1" min="0" value={brouillon.latenceMaximaleMs} onChange={(e) => modifier("latenceMaximaleMs", e.target.value)} />
+            <div className="sup-count">{sitesFiltres.length} site{sitesFiltres.length > 1 ? "s" : ""}</div>
+            <div className="sup-site-list">
+              {sitesFiltres.length === 0 && (
+                <div className="sup-site-empty">Aucun site ne correspond à « {recherche} ».</div>
+              )}
+              {sitesFiltres.map((s) => (
+                <button
+                  type="button"
+                  key={s.siteId}
+                  className={`sup-site-row ${s.siteId === siteId ? "active" : ""}`}
+                  onClick={() => setSiteId(s.siteId)}
+                >
+                  <span className={`sup-site-dot ${s.personnalise ? "personnalise" : ""}`}></span>
+                  <span className="sup-site-texts">
+                    <span className="sup-site-nom">{s.siteNom}</span>
+                    <br />
+                    <span className="sup-site-ville">{s.ville}</span>
+                  </span>
+                </button>
+              ))}
             </div>
           </div>
 
-          <h2 style={{ fontSize: "15px", margin: "20px 0 12px" }}>Notifications push</h2>
-          <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-            <label style={{ display: "flex", alignItems: "center", gap: "8px", cursor: "pointer" }}>
-              <input type="checkbox" checked={brouillon.notificationsActives} onChange={(e) => modifier("notificationsActives", e.target.checked)} />
-              Notifications activées pour ce site
-            </label>
-            <label style={{ display: "flex", alignItems: "center", gap: "8px", cursor: "pointer", opacity: brouillon.notificationsActives ? 1 : 0.5 }}>
-              <input type="checkbox" checked={brouillon.notifPanneAnptic} disabled={!brouillon.notificationsActives} onChange={(e) => modifier("notifPanneAnptic", e.target.checked)} />
-              Alerter en cas de panne ANPTIC (liaison WAN)
-            </label>
-            <label style={{ display: "flex", alignItems: "center", gap: "8px", cursor: "pointer", opacity: brouillon.notificationsActives ? 1 : 0.5 }}>
-              <input type="checkbox" checked={brouillon.notifPanneLan} disabled={!brouillon.notificationsActives} onChange={(e) => modifier("notifPanneLan", e.target.checked)} />
-              Alerter en cas de panne LAN (réseau du bâtiment)
-            </label>
-            <label style={{ display: "flex", alignItems: "center", gap: "8px", cursor: "pointer", opacity: brouillon.notificationsActives ? 1 : 0.5 }}>
-              <input type="checkbox" checked={brouillon.notifRetablissement} disabled={!brouillon.notificationsActives} onChange={(e) => modifier("notifRetablissement", e.target.checked)} />
-              Alerter au rétablissement
-            </label>
-          </div>
+          {/* ---- Colonne de droite : hero + metriques + notifications ---- */}
+          <div>
+            <div className="sup-hero">
+              <div>
+                <div className="sup-hero-title">{brouillon.siteNom}</div>
+                <div className="sup-hero-sub">{brouillon.ville}</div>
+              </div>
+              <span className={`sup-hero-badge ${brouillon.personnalise ? "personnalise" : ""}`}>
+                {brouillon.personnalise ? "★ Personnalisé" : "○ Valeurs par défaut"}
+              </span>
+            </div>
 
-          <div className="modal-actions" style={{ justifyContent: "flex-start", marginTop: "20px", gap: "10px" }}>
-            <button className="btn-primary" onClick={enregistrer}>Enregistrer</button>
-            {brouillon.personnalise && (
-              <button className="btn-secondary" onClick={reinitialiser}>Réinitialiser aux valeurs par défaut</button>
-            )}
+            <h2 className="sup-section-title">⚙ Seuils et actualisation</h2>
+            <div className="sup-metric-grid">
+              <div className="sup-metric-card">
+                <div className="sup-metric-head">
+                  <span className="sup-metric-icon kpi-icon-navy">⏱</span>
+                  <span className="sup-metric-label">Intervalle d'actualisation</span>
+                </div>
+                <div className="sup-metric-input-row">
+                  <input
+                    type="number"
+                    min="10"
+                    value={brouillon.intervalleActualisationS}
+                    onChange={(e) => modifier("intervalleActualisationS", e.target.value)}
+                  />
+                  <span className="sup-metric-unit">sec</span>
+                </div>
+                <p className="sup-metric-hint">Fréquence de rafraîchissement automatique côté décideur.</p>
+              </div>
+
+              <div className="sup-metric-card">
+                <div className="sup-metric-head">
+                  <span className="sup-metric-icon kpi-icon-blue">📶</span>
+                  <span className="sup-metric-label">Débit minimal acceptable</span>
+                </div>
+                <div className="sup-metric-input-row">
+                  <input
+                    type="number"
+                    step="0.1"
+                    min="0"
+                    value={brouillon.debitMinimalMbps}
+                    onChange={(e) => modifier("debitMinimalMbps", e.target.value)}
+                  />
+                  <span className="sup-metric-unit">Mbps</span>
+                </div>
+                <p className="sup-metric-hint">En dessous, la liaison est signalée « dégradée ».</p>
+              </div>
+
+              <div className="sup-metric-card">
+                <div className="sup-metric-head">
+                  <span className="sup-metric-icon kpi-icon-orange">⚡</span>
+                  <span className="sup-metric-label">Latence maximale acceptable</span>
+                </div>
+                <div className="sup-metric-input-row">
+                  <input
+                    type="number"
+                    step="1"
+                    min="0"
+                    value={brouillon.latenceMaximaleMs}
+                    onChange={(e) => modifier("latenceMaximaleMs", e.target.value)}
+                  />
+                  <span className="sup-metric-unit">ms</span>
+                </div>
+                <p className="sup-metric-hint">Au-delà, la qualité du lien est dégradée dans le score affiché.</p>
+              </div>
+            </div>
+
+            <h2 className="sup-section-title">🔔 Notifications push</h2>
+            <div className="sup-toggle-panel">
+              <div className="sup-toggle-row principal">
+                <span className="sup-toggle-icon">🔔</span>
+                <span className="sup-toggle-texts">
+                  <span className="sup-toggle-title">Notifications activées pour ce site</span>
+                  <span className="sup-toggle-desc">Interrupteur général — désactive tout le reste si éteint.</span>
+                </span>
+                <span className="sup-switch">
+                  <input
+                    type="checkbox"
+                    checked={brouillon.notificationsActives}
+                    onChange={(e) => modifier("notificationsActives", e.target.checked)}
+                  />
+                  <span className="sup-switch-track"></span>
+                </span>
+              </div>
+
+              <div className={`sup-toggle-row ${brouillon.notificationsActives ? "" : "dim"}`}>
+                <span className="sup-toggle-icon">📡</span>
+                <span className="sup-toggle-texts">
+                  <span className="sup-toggle-title">Panne ANPTIC</span>
+                  <span className="sup-toggle-desc">Alerte en cas de coupure de la liaison WAN (réseau national).</span>
+                </span>
+                <span className="sup-switch">
+                  <input
+                    type="checkbox"
+                    checked={brouillon.notifPanneAnptic}
+                    disabled={!brouillon.notificationsActives}
+                    onChange={(e) => modifier("notifPanneAnptic", e.target.checked)}
+                  />
+                  <span className="sup-switch-track"></span>
+                </span>
+              </div>
+
+              <div className={`sup-toggle-row ${brouillon.notificationsActives ? "" : "dim"}`}>
+                <span className="sup-toggle-icon">🏢</span>
+                <span className="sup-toggle-texts">
+                  <span className="sup-toggle-title">Panne LAN</span>
+                  <span className="sup-toggle-desc">Alerte en cas d'incident sur le réseau local du bâtiment.</span>
+                </span>
+                <span className="sup-switch">
+                  <input
+                    type="checkbox"
+                    checked={brouillon.notifPanneLan}
+                    disabled={!brouillon.notificationsActives}
+                    onChange={(e) => modifier("notifPanneLan", e.target.checked)}
+                  />
+                  <span className="sup-switch-track"></span>
+                </span>
+              </div>
+
+              <div className={`sup-toggle-row ${brouillon.notificationsActives ? "" : "dim"}`}>
+                <span className="sup-toggle-icon">✅</span>
+                <span className="sup-toggle-texts">
+                  <span className="sup-toggle-title">Rétablissement</span>
+                  <span className="sup-toggle-desc">Alerte dès qu'un incident est résolu (ANPTIC ou LAN).</span>
+                </span>
+                <span className="sup-switch">
+                  <input
+                    type="checkbox"
+                    checked={brouillon.notifRetablissement}
+                    disabled={!brouillon.notificationsActives}
+                    onChange={(e) => modifier("notifRetablissement", e.target.checked)}
+                  />
+                  <span className="sup-switch-track"></span>
+                </span>
+              </div>
+            </div>
+
+            <div className="sup-actions">
+              <button className="btn-primary" onClick={enregistrer}>Enregistrer</button>
+              {brouillon.personnalise && (
+                <button className="btn-outline" onClick={reinitialiser}>↺ Réinitialiser aux valeurs par défaut</button>
+              )}
+            </div>
           </div>
         </div>
       </div>

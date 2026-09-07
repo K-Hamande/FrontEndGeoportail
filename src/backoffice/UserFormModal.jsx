@@ -21,6 +21,7 @@ function UserFormModal({ userAModifier, onClose, onSaved }) {
   const [sitesSelectionnes, setSitesSelectionnes] = useState(
     userAModifier?.sitesAutorises ?? []
   );
+  const [filtreSites, setFiltreSites] = useState("");
   const [erreur, setErreur] = useState(null);
   const [enregistrement, setEnregistrement] = useState(false);
 
@@ -68,6 +69,15 @@ function UserFormModal({ userAModifier, onClose, onSaved }) {
 
   const roleEstGlobalParDefaut = form.role === "SUPER_ADMIN";
 
+  const texteFiltre = filtreSites.trim().toLowerCase();
+  const sitesFiltres = texteFiltre
+    ? sites.filter(
+        (site) =>
+          site.nom.toLowerCase().includes(texteFiltre) ||
+          site.ville?.toLowerCase().includes(texteFiltre)
+      )
+    : sites;
+
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-box" onClick={(e) => e.stopPropagation()}>
@@ -112,9 +122,21 @@ function UserFormModal({ userAModifier, onClose, onSaved }) {
             <div style={{ marginTop: "12px" }}>
               <label style={{ fontSize: "12px", fontWeight: 600, color: "var(--color-text-muted)" }}>
                 Sites autorisés (aucune case cochée = accès à tous les sites)
+                {sitesSelectionnes.length > 0 && ` — ${sitesSelectionnes.length} sélectionné(s)`}
               </label>
+              <input
+                type="text"
+                className="filter-input"
+                style={{ width: "100%", marginTop: "6px" }}
+                placeholder="Rechercher un site par nom ou ville…"
+                value={filtreSites}
+                onChange={(e) => setFiltreSites(e.target.value)}
+              />
               <div className="site-checkbox-list">
-                {sites.map((site) => (
+                {sitesFiltres.length === 0 && (
+                  <p className="field-hint" style={{ margin: "6px 0" }}>Aucun site ne correspond à « {filtreSites} ».</p>
+                )}
+                {sitesFiltres.map((site) => (
                   <label key={site.siteId} className="site-checkbox-item">
                     <input
                       type="checkbox"
@@ -122,6 +144,7 @@ function UserFormModal({ userAModifier, onClose, onSaved }) {
                       onChange={() => toggleSite(site.siteId)}
                     />
                     {site.nom}
+                    {site.ville && <span style={{ color: "var(--color-text-muted)" }}> — {site.ville}</span>}
                   </label>
                 ))}
               </div>

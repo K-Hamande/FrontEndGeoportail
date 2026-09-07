@@ -166,10 +166,19 @@ function DecideurUsersPage() {
                   </div>
                   <div className="form-field">
                     <label>Rôle *</label>
-                    <SearchableSelect value={form.role} onChange={(e) => setForm({ ...form, role: e.target.value, ministere: "" })}>
+                    <SearchableSelect
+                      value={form.role}
+                      onChange={(e) => setForm({ ...form, role: e.target.value, ministere: "" })}
+                      disabled={!!userEdite}
+                    >
                       <option value="DECIDEUR">Décideur ministériel</option>
                       <option value="LAMBDA">Utilisateur lambda</option>
                     </SearchableSelect>
+                    {userEdite && (
+                      <span className="field-hint">
+                        Le rôle ne peut pas être modifié après la création. Supprimez le compte et recréez-le si besoin.
+                      </span>
+                    )}
                   </div>
                   {form.role === "DECIDEUR" && (
                     <div className="form-field">

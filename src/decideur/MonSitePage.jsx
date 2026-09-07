@@ -6,20 +6,36 @@ import UpdateBar from "./UpdateBar";
 import AnpticStatusCard from "./AnpticStatusCard";
 import LanStatusCard from "./LanStatusCard";
 
-const INTERVALLE_ACTUALISATION_MS = 30000; // 30 s
+const INTERVALLE_ACTUALISATION_DEFAUT_S = 60; // repris de AdminSupervisionService.DEFAUT_INTERVALLE_S
 
 function MonSitePage() {
-  const { siteId } = useSiteSelection();
+  const { siteId, sites } = useSiteSelection();
+  const siteSelectionne = sites.find((site) => site.siteId === siteId);
+  const intervalleActualisationMs =
+    (siteSelectionne?.intervalleActualisationS ?? INTERVALLE_ACTUALISATION_DEFAUT_S) * 1000;
   const [anpticData, setAnpticData] = useState(null);
   const [lanData, setLanData] = useState(null);
   const [erreur, setErreur] = useState(null);
   const [lastUpdated, setLastUpdated] = useState(new Date());
+  const [isLoading, setIsLoading] = useState(false);
 
-  const chargerStatuts = useCallback(() => {
+  const chargerStatuts = useCallback(async () => {
     if (!siteId) return;
-    apiGet(`/api/v1/site/${siteId}/anptic`).then(setAnpticData).catch((err) => setErreur(err.message));
-    apiGet(`/api/v1/site/${siteId}/lan`).then(setLanData).catch((err) => setErreur(err.message));
-    setLastUpdated(new Date());
+    setIsLoading(true);
+    setErreur(null);
+    try {
+      const [anptic, lan] = await Promise.all([
+        apiGet(`/api/v1/site/${siteId}/anptic`),
+        apiGet(`/api/v1/site/${siteId}/lan`),
+      ]);
+      setAnpticData(anptic);
+      setLanData(lan);
+      setLastUpdated(new Date());
+    } catch (err) {
+      setErreur(err.message);
+    } finally {
+      setIsLoading(false);
+    }
   }, [siteId]);
 
   useEffect(() => {
@@ -27,13 +43,13 @@ function MonSitePage() {
   }, [chargerStatuts]);
 
   useEffect(() => {
-    const intervalle = setInterval(chargerStatuts, INTERVALLE_ACTUALISATION_MS);
+    const intervalle = setInterval(chargerStatuts, intervalleActualisationMs);
     return () => clearInterval(intervalle);
-  }, [chargerStatuts]);
+  }, [chargerStatuts, intervalleActualisationMs]);
 
   return (
     <DecideurLayout>
-      <UpdateBar lastUpdated={lastUpdated} onRefresh={chargerStatuts} />
+      <UpdateBar lastUpdated={lastUpdated} onRefresh={chargerStatuts} isLoading={isLoading} />
       {erreur && <p style={{ color: "var(--color-ko)" }}>Erreur : {erreur}</p>}
       <AnpticStatusCard data={anpticData} />
       <LanStatusCard data={lanData} />
