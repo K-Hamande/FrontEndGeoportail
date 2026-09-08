@@ -63,7 +63,7 @@ function NotificationsAdminPage() {
               <tr>
                 <th>Profil</th>
                 <th>Site</th>
-                <th>Plateforme</th>
+                <th>Navigateur / appareil</th>
                 <th>Enregistré le</th>
                 <th>Statut</th>
                 <th>Actions</th>
@@ -74,7 +74,7 @@ function NotificationsAdminPage() {
                 <tr key={t.id}>
                   <td className="site-name-cell">{t.profil}</td>
                   <td>{t.siteNom}</td>
-                  <td>{t.plateforme}</td>
+                  <td>{t.endpointMasque}</td>
                   <td>{new Date(t.enregistreLe).toLocaleDateString("fr-FR")}</td>
                   <td>
                     <span className={`status-badge ${t.actif ? "badge-ok" : "badge-unknown"}`}>

@@ -5,6 +5,12 @@ import { formaterTempsRelatif } from "../shared/timeFormat";
 import { useSiteSelection } from "../shared/SiteSelectionContext";
 import ErrorBanner from "../shared/ErrorBanner";
 import DecideurLayout from "./DecideurLayout";
+import {
+  pushEstSupporte,
+  permissionPushActuelle,
+  abonnementPushExistant,
+  activerPushPourSites,
+} from "../shared/pushNotifications";
 
 const CLE_LUS = "resina-alertes-lues";
 const CLE_BANNIERE_MASQUEE = "resina-banniere-masquee";
@@ -30,7 +36,7 @@ function badgeLabel(status) {
 }
 
 function AlertesPage() {
-  const { choisirSite } = useSiteSelection();
+  const { choisirSite, sites } = useSiteSelection();
   const [incidents, setIncidents] = useState([]);
   const [erreur, setErreur] = useState(null);
   const [idsLus, setIdsLus] = useState(chargerIdsLus);
@@ -38,6 +44,9 @@ function AlertesPage() {
   const [banniereVisible, setBanniereVisible] = useState(
     sessionStorage.getItem(CLE_BANNIERE_MASQUEE) !== "true"
   );
+  const [pushActif, setPushActif] = useState(false);
+  const [pushEnCours, setPushEnCours] = useState(false);
+  const [pushErreur, setPushErreur] = useState(null);
 
   function charger() {
     apiGet("/api/v1/incidents").then(setIncidents).catch((err) => setErreur(err.message));
@@ -54,8 +63,23 @@ function AlertesPage() {
       .then((pref) => setAlertesActivees(pref.activees))
       .catch(() => {});
 
+    abonnementPushExistant().then(setPushActif);
+
     return () => clearInterval(intervalle);
   }, []);
+
+  async function activerPush() {
+    setPushErreur(null);
+    setPushEnCours(true);
+    try {
+      await activerPushPourSites(sites.map((s) => s.siteId), "Décideur");
+      setPushActif(true);
+    } catch (err) {
+      setPushErreur(err.message);
+    } finally {
+      setPushEnCours(false);
+    }
+  }
 
   function marquerCommeLu(id) {
     const nouveaux = new Set(idsLus);
@@ -98,6 +122,25 @@ function AlertesPage() {
             <button className="btn-primary" onClick={activerAlertes}>Activer</button>
             <button className="btn-secondary" onClick={plusTard}>Plus tard</button>
           </div>
+        </div>
+      )}
+
+      {pushEstSupporte() && permissionPushActuelle() !== "denied" && (
+        <div className="alert-banner">
+          {pushActif ? (
+            <p>🔔 Notifications activées sur cet appareil.</p>
+          ) : (
+            <>
+              <p style={{ fontWeight: 700 }}>Activer les notifications sur cet appareil</p>
+              <p>Recevez une notification instantanée dès qu'une panne (ou un rétablissement) survient, directement sur ce navigateur.</p>
+              {pushErreur && <p style={{ color: "var(--color-ko)" }}>{pushErreur}</p>}
+              <div style={{ display: "flex", gap: "10px", marginTop: "8px" }}>
+                <button className="btn-primary" onClick={activerPush} disabled={pushEnCours}>
+                  {pushEnCours ? "Activation..." : "Activer"}
+                </button>
+              </div>
+            </>
+          )}
         </div>
       )}
 

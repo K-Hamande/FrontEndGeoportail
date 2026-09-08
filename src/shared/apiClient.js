@@ -35,7 +35,7 @@ export async function apiGet(path) {
     throw await construireErreurApi(response);
   }
 
-  return response.json();
+  return lireCorpsJson(response);
 }
 
 export async function apiPost(path, body) {
@@ -75,5 +75,15 @@ export async function apiPost(path, body) {
     throw await construireErreurApi(response);
   }
 
-  return response.status === 204 ? null : response.json();
+  return lireCorpsJson(response);
+}
+
+// Certains endpoints (ex: enregistrement d'un abonnement push) renvoient
+// un corps VIDE avec un statut 200 (pas 204) - response.json() plante
+// alors avec "Unexpected end of JSON input". On lit le texte d'abord et
+// on ne parse que s'il y a vraiment quelque chose, comme deja fait dans
+// backofficeApiClient.js.
+async function lireCorpsJson(response) {
+  const texte = await response.text();
+  return texte ? JSON.parse(texte) : null;
 }
