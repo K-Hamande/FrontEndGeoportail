@@ -1,7 +1,8 @@
 import { useNavigate } from "react-router-dom";
-import { getDecideurAuth, clearDecideurAuth } from "../shared/decideurAuth";
+import { estConnecteDecideur, getDecideurAuth, clearDecideurAuth } from "../shared/decideurAuth";
 
 function LambdaLayout({ children }) {
+  const connecte = estConnecteDecideur();
   const auth = getDecideurAuth();
   const navigate = useNavigate();
 
@@ -22,15 +23,22 @@ function LambdaLayout({ children }) {
               <div className="lambda-subtitle">État du réseau national</div>
             </div>
           </div>
-          <nav className="lambda-nav">
-            <button className="lambda-nav-btn" onClick={() => navigate("/lambda")}> 📋 Liste</button>
-            <button className="lambda-nav-btn" onClick={() => navigate("/lambda/carte")}>🗺️ Carte</button>
-          </nav>
-          <div className="lambda-user">
-            <span className="lambda-user-name">{auth?.role}</span>
-            
-            <button className="lambda-logout" onClick={logout} title="Se déconnecter">⏻</button>
-          </div>
+
+          {/* Visiteur anonyme (cas normal) : simple lien vers l'espace
+              decideur. Ancien compte LAMBDA encore connecte (systeme
+              conserve pour compatibilite) : conserve la deconnexion. */}
+          {connecte ? (
+            <div className="lambda-user">
+              <span className="lambda-user-name">{auth?.role}</span>
+              <button className="lambda-logout" onClick={logout} title="Se déconnecter">⏻</button>
+            </div>
+          ) : (
+            <nav className="lambda-nav">
+              <button className="lambda-nav-btn" onClick={() => navigate("/login")}>
+                🔑 Connexion décideur
+              </button>
+            </nav>
+          )}
         </div>
       </header>
       <main className="lambda-content">{children}</main>

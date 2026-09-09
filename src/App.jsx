@@ -7,7 +7,6 @@ import MonSitePage from "./decideur/MonSitePage";
 import CartePage from "./decideur/CartePage";
 import AlertesPage from "./decideur/AlertesPage";
 import LambdaListePage from "./UtilisateurLambda/LambdaListePage";
-import LambdaCartePage from "./UtilisateurLambda/LambdaCartePage";
 import LoginPage from "./backoffice/LoginPage";
 import ProtectedRoute from "./backoffice/ProtectedRoute";
 import BackofficeLayout from "./backoffice/BackofficeLayout";
@@ -26,54 +25,43 @@ import MonProfilPage from "./backoffice/MonProfilPage";
 import RolesPage from "./backoffice/RolesPage";
 import IncidentsHistoriquePage from "./backoffice/IncidentsHistoriquePage";
 
-// Redirige vers /login si non connecte
-function RequireDecideurAuth({ children }) {
-  return estConnecteDecideur() ? children : <Navigate to="/login" replace />;
-}
-
-// Routes decideur : selon le role, redirige vers la vue appropriee
+// Acces "utilisateur lambda" (statut simplifie OK/KO, sans compte ni
+// connexion - vue publique, premiere page vue au lancement du site) vs
+// acces "decideur" (compte + mot de passe, tableau de bord complet par
+// ministere) : la racine "/" affiche l'un ou l'autre selon qu'un decideur
+// est effectivement connecte, plutot que d'exiger une connexion pour
+// tout le monde comme avant. Un role LAMBDA authentifie (ancien systeme
+// de comptes, conserve pour compatibilite mais plus utilise pour de
+// nouveaux acces) est traite comme "non decideur" et voit la meme vue
+// publique - un seul chemin a maintenir.
 function DecideurRoutes() {
   const auth = getDecideurAuth();
-  const estLambda = auth?.role === "LAMBDA";
+  const estDecideurAuthentifie = estConnecteDecideur() && auth?.role === "DECIDEUR";
 
   return (
     <Routes>
-      {/* Page de connexion commune */}
+      {/* Page de connexion, pour les decideurs qui ont un compte */}
       <Route path="/login" element={<DecideurLoginPage />} />
 
-      {/* Routes LAMBDA : vue simplifiee */}
-      <Route path="/lambda" element={
-        <RequireDecideurAuth><LambdaListePage /></RequireDecideurAuth>
-      } />
-      <Route path="/lambda/carte" element={
-        <RequireDecideurAuth><LambdaCartePage /></RequireDecideurAuth>
-      } />
-
-      {/* Routes DECIDEUR : interface complete. Redirection immediate
-          vers la vue Lambda pour ce role, SANS monter SiteSelectionProvider
-          (inutile pour ce profil, qui n'a pas de selecteur de site). */}
-      {estLambda ? (
-        <>
-          <Route path="/" element={<Navigate to="/lambda" replace />} />
-          <Route path="/carte" element={<Navigate to="/lambda/carte" replace />} />
-          <Route path="/alertes" element={<Navigate to="/lambda" replace />} />
-        </>
-      ) : (
+      {estDecideurAuthentifie ? (
         // SiteSelectionProvider en layout partage : une SEULE instance pour
         // les 3 pages (Mon site / Carte / Alertes), montee une fois et
         // conservee lors de la navigation entre elles (via <Outlet/>),
         // pour que le site selectionne dans le header reste coherent
         // partout - cf. commentaire de SiteSelectionContext.jsx.
-        <Route element={
-          <RequireDecideurAuth>
-            <SiteSelectionProvider><Outlet /></SiteSelectionProvider>
-          </RequireDecideurAuth>
-        }>
+        <Route element={<SiteSelectionProvider><Outlet /></SiteSelectionProvider>}>
           <Route index element={<MonSitePage />} />
           <Route path="carte" element={<CartePage />} />
           <Route path="alertes" element={<AlertesPage />} />
         </Route>
+      ) : (
+        <Route index element={<LambdaListePage />} />
       )}
+
+      {/* Toute autre URL (anciens liens /lambda, ou /carte et /alertes
+          quand on n'est pas connecte decideur) revient a la vue publique
+          plutot que d'afficher une page blanche ou d'imposer une connexion. */}
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 }

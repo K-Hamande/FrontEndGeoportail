@@ -5,13 +5,12 @@ export async function apiGet(path) {
   const token = getDecideurToken();
   const estBackoffice = window.location.pathname.startsWith("/backoffice");
 
-  if (!token && !estBackoffice) {
-    if (!window.location.pathname.startsWith("/login")) {
-      window.location.href = "/login";
-    }
-    throw new Error("Non connecté");
-  }
-
+  // Pas de redirection preventive vers /login ici : certains endpoints
+  // (ex: /api/v1/sites/statut-simple, vue "utilisateur lambda") sont
+  // volontairement publics et n'exigent aucun token. On tente la requete
+  // sans Authorization si on n'en a pas, et on ne reagit qu'a un vrai 401
+  // renvoye par le backend (cf. plus bas) - c'est lui qui sait vraiment
+  // si CET endpoint precis exige une connexion.
   const headers = token
     ? { Authorization: `Bearer ${token}` }
     : {};
@@ -41,13 +40,6 @@ export async function apiGet(path) {
 export async function apiPost(path, body) {
   const token = getDecideurToken();
   const estBackoffice = window.location.pathname.startsWith("/backoffice");
-
-  if (!token && !estBackoffice) {
-    if (!window.location.pathname.startsWith("/login")) {
-      window.location.href = "/login";
-    }
-    throw new Error("Non connecté");
-  }
 
   const headers = { "Content-Type": "application/json" };
   if (token) headers.Authorization = `Bearer ${token}`;
