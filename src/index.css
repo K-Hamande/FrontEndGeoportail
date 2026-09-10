@@ -3796,6 +3796,15 @@ body {
 }
 
 .lambda-site-card {
+  /* min-width: 0 est essentiel ici : .lambda-site-card est un item de
+     .lambda-sites-grid (display:grid), et un item de grille a par defaut
+     min-width:auto - il refuse de retrecir sous la largeur de son
+     contenu. Comme .lambda-site-nom est en white-space:nowrap (necessaire
+     pour l'ellipsis), un nom de site long forcait toute la carte - donc
+     toute la grille, donc la page entiere - a deborder horizontalement,
+     poussant le badge OK/KO hors ecran (surtout visible sur mobile, ou
+     la marge est la plus etroite). */
+  min-width: 0;
   background: white; border-radius: 12px; padding: 14px 16px;
   display: flex; align-items: center; gap: 12px;
   border: 1px solid rgba(10, 61, 122, 0.05);
@@ -3819,7 +3828,7 @@ body {
 
 .lambda-site-info { flex: 1; min-width: 0; }
 .lambda-site-nom { font-size: 13px; font-weight: 700; color: #10203D; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.lambda-site-ville { font-size: 11px; color: #5B6478; }
+.lambda-site-ville { font-size: 11px; color: #5B6478; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
 .lambda-site-badge {
   padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; flex-shrink: 0;
@@ -3838,18 +3847,6 @@ body {
 }
 .lambda-pagination button:disabled { opacity: 0.4; cursor: not-allowed; }
 .lambda-pagination button:not(:disabled):hover { background: #F0F4FB; }
-
-/* Carte lambda */
-
-@media (min-width: 768px) {
-  .lambda-sites-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-@media (min-width: 1200px) {
-  .lambda-sites-grid { grid-template-columns: repeat(3, 1fr); }
-}
 
 /* ==================================================================
    PAGE ROLES (Backoffice) - documentation statique des roles admin
