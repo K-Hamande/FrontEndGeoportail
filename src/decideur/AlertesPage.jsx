@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
+import { Bell, Globe, Building2, ChevronRight } from "lucide-react";
 import { apiGet, apiPost } from "../shared/apiClient";
-import { getStatusColor } from "../shared/statusStyles";
+import { getStatusColor, getStatusLabel, getStatusIcon } from "../shared/statusStyles";
 import { formaterTempsRelatif } from "../shared/timeFormat";
 import { useSiteSelection } from "../shared/SiteSelectionContext";
 import ErrorBanner from "../shared/ErrorBanner";
@@ -27,12 +28,6 @@ function badgeClass(status) {
   if (status === "KO") return "badge-ko";
   if (status === "WARN") return "badge-warn";
   return "badge-ok";
-}
-
-function badgeLabel(status) {
-  if (status === "KO") return "✕ Indisponible";
-  if (status === "WARN") return "⚠ Alerte";
-  return "✓ Actif";
 }
 
 function AlertesPage() {
@@ -128,7 +123,7 @@ function AlertesPage() {
       {pushEstSupporte() && permissionPushActuelle() !== "denied" && (
         <div className="alert-banner">
           {pushActif ? (
-            <p>🔔 Notifications activées sur cet appareil.</p>
+            <p style={{ display: "flex", alignItems: "center", gap: "6px" }}><Bell size={15} /> Notifications activées sur cet appareil.</p>
           ) : (
             <>
               <p style={{ fontWeight: 700 }}>Activer les notifications sur cet appareil</p>
@@ -162,6 +157,8 @@ function AlertesPage() {
         {incidents.map((incident) => {
           const couleur = getStatusColor(incident.nouveauStatut);
           const lu = idsLus.has(incident.id);
+          const TypeIcone = incident.type === "ANPTIC" ? Globe : Building2;
+          const StatutIcone = getStatusIcon(incident.nouveauStatut);
 
           return (
             <div
@@ -172,7 +169,7 @@ function AlertesPage() {
             >
               <div className="card-top">
                 <div className="card-icon" style={{ position: "relative" }}>
-                  {incident.type === "ANPTIC" ? "🌐" : "🏢"}
+                  <TypeIcone size={19} />
                   {!lu && <span className="unread-dot"></span>}
                 </div>
                 <div className="card-titles">
@@ -180,7 +177,7 @@ function AlertesPage() {
                   <div className="card-subtitle">{incident.ville}</div>
                 </div>
                 <span className={`status-badge ${badgeClass(incident.nouveauStatut)}`}>
-                  {badgeLabel(incident.nouveauStatut)}
+                  <StatutIcone size={12} strokeWidth={3} /> {getStatusLabel(incident.nouveauStatut)}
                 </span>
               </div>
 
@@ -196,7 +193,7 @@ function AlertesPage() {
                     choisirSite(incident.siteId);
                   }}
                 >
-                  Voir le détail →
+                  Voir le détail <ChevronRight size={13} />
                 </button>
               </div>
             </div>

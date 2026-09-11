@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { Building2, Plug, MessageCircle, Phone, ChevronDown } from "lucide-react";
+import { getStatusIcon } from "../shared/statusStyles";
 
 function classFor(status) {
   if (status === "KO") return "ko";
@@ -25,7 +27,7 @@ function BoutonWhatsapp(props) {
   const lien = "https://wa.me/" + props.numero;
   return (
     <a className="lan-contact-btn lan-contact-btn-whatsapp" href={lien} target="_blank" rel="noopener noreferrer" onClick={ignorerClicParent}>
-      <span>💬</span> WhatsApp
+      <MessageCircle size={14} /> WhatsApp
     </a>
   );
 }
@@ -34,7 +36,7 @@ function BoutonAppel(props) {
   const lien = "tel:" + props.numero;
   return (
     <a className="lan-contact-btn lan-contact-btn-appel" href={lien} onClick={ignorerClicParent}>
-      <span>📞</span> Appeler
+      <Phone size={14} /> Appeler
     </a>
   );
 }
@@ -83,8 +85,10 @@ function LanStatusCard({ data }) {
     });
   }
 
-  const badgeClass = data.globalStatus === "KO" ? "badge-ko" : data.globalStatus === "WARN" ? "badge-warn" : "badge-ok";
-  const badgeText = data.globalStatus === "KO" ? "✕ Incident" : data.globalStatus === "WARN" ? "⚠ Alerte" : "✓ Normal";
+  const globalStatusPourBadge = data.globalStatus === "KO" ? "KO" : data.globalStatus === "WARN" ? "WARN" : "OK";
+  const badgeClass = globalStatusPourBadge === "KO" ? "badge-ko" : globalStatusPourBadge === "WARN" ? "badge-warn" : "badge-ok";
+  const BadgeIcone = getStatusIcon(globalStatusPourBadge);
+  const badgeTexte = globalStatusPourBadge === "KO" ? "Incident" : globalStatusPourBadge === "WARN" ? "Alerte" : "Normal";
 
   // Aucun equipement LAN synchronise pour ce site : afficher un vrai etat
   // vide plutot que 3 compteurs a "0" qui ressemblent a une erreur.
@@ -92,7 +96,7 @@ function LanStatusCard({ data }) {
     return (
       <div className="status-card">
         <div className="card-top">
-          <div className="card-icon">🏢</div>
+          <div className="card-icon"><Building2 size={19} /></div>
           <div className="card-titles">
             <div className="card-title">Réseau du bâtiment</div>
             <div className="card-subtitle">LAN interne — Wi-Fi &amp; commutateurs</div>
@@ -100,7 +104,7 @@ function LanStatusCard({ data }) {
         </div>
 
         <div className="lan-empty-state">
-          <div className="lan-empty-icon">🔌</div>
+          <div className="lan-empty-icon"><Plug size={22} /></div>
           <p className="lan-empty-title">Aucun équipement LAN synchronisé</p>
           <p className="lan-empty-text">
             Ce site n'a pas encore d'équipements Wi-Fi/commutateurs découverts depuis NetXMS,
@@ -114,12 +118,14 @@ function LanStatusCard({ data }) {
   return (
     <div className="status-card">
       <div className="card-top">
-        <div className="card-icon">🏢</div>
+        <div className="card-icon"><Building2 size={19} /></div>
         <div className="card-titles">
           <div className="card-title">Réseau du bâtiment</div>
           <div className="card-subtitle">LAN interne — Wi-Fi &amp; commutateurs</div>
         </div>
-        <span className={`status-badge ${badgeClass}`}>{badgeText}</span>
+        <span className={`status-badge ${badgeClass}`}>
+          <BadgeIcone size={12} strokeWidth={3} /> {badgeTexte}
+        </span>
       </div>
 
       <div className="counters-row">
@@ -156,7 +162,7 @@ function LanStatusCard({ data }) {
                     <div className="floor-name">{etage.etage}</div>
                     <div className="floor-detail">{etage.detail}</div>
                   </div>
-                  <span className="floor-chevron">▼</span>
+                  <ChevronDown size={14} className="floor-chevron" />
                 </div>
 
                 {ouvert && (

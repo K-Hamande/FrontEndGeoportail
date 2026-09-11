@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import { CheckCircle2, TriangleAlert, XCircle } from "lucide-react";
 import { apiGet } from "../shared/apiClient";
 import { useSiteSelection } from "../shared/SiteSelectionContext";
 import ErrorBanner from "../shared/ErrorBanner";
@@ -21,10 +22,10 @@ function pireStatut(a, b) {
 }
 
 const HERO_PAR_STATUT = {
-  OK: { classe: "hero-ok", icone: "✓", titre: "Tout fonctionne normalement", sous: "Réseau ANPTIC et réseau du bâtiment opérationnels." },
-  WARN: { classe: "hero-warn", icone: "⚠", titre: "Attention requise", sous: "Une dégradation a été détectée sur ce site." },
-  UNKNOWN: { classe: "hero-warn", icone: "⚠", titre: "Statut incertain", sous: "Certaines données ne sont pas encore disponibles." },
-  KO: { classe: "hero-ko", icone: "✕", titre: "Panne détectée", sous: "Une intervention est nécessaire sur ce site." },
+  OK: { classe: "hero-ok", Icone: CheckCircle2, titre: "Tout fonctionne normalement", sous: "Réseau ANPTIC et réseau du bâtiment opérationnels." },
+  WARN: { classe: "hero-warn", Icone: TriangleAlert, titre: "Attention requise", sous: "Une dégradation a été détectée sur ce site." },
+  UNKNOWN: { classe: "hero-warn", Icone: TriangleAlert, titre: "Statut incertain", sous: "Certaines données ne sont pas encore disponibles." },
+  KO: { classe: "hero-ko", Icone: XCircle, titre: "Panne détectée", sous: "Une intervention est nécessaire sur ce site." },
 };
 
 function MonSitePage() {
@@ -76,7 +77,7 @@ function MonSitePage() {
 
       {hero && (
         <div className={`site-hero ${hero.classe}`}>
-          <span className="site-hero-icon">{hero.icone}</span>
+          <span className="site-hero-icon"><hero.Icone size={26} /></span>
           <div className="site-hero-texts">
             <div className="site-hero-title">{hero.titre}</div>
             <div className="site-hero-sub">{hero.sous}</div>

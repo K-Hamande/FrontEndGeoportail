@@ -1,5 +1,9 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useLocation, useOutletContext } from "react-router-dom";
+import {
+  Menu, Sparkle, Bell, Building2, Check, TriangleAlert, X, Plug,
+  Activity, Download, RefreshCw, Eye, Trophy, ThumbsUp, Siren, Circle,
+} from "lucide-react";
 import { useAuth } from "../shared/AuthContext";
 import { adminGet } from "../shared/backofficeApiClient";
 import ErrorBanner from "../shared/ErrorBanner";
@@ -84,10 +88,10 @@ function DashboardPage() {
     : parseFloat(pctOk) >= 40 ? "surveiller" : "critique";
 
   const summaryTexts = {
-    excellent: { icon: "🏆", title: "Réseau global en excellente santé", text: "La majorité des sites RESINA sont opérationnels." },
-    bon: { icon: "👍", title: "Réseau global en bonne santé", text: `${ok} des ${actifs} sites actifs sont opérationnels.` },
-    surveiller: { icon: "⚠️", title: "Réseau global à surveiller", text: `Seulement ${ok} des ${actifs} sites sont opérationnels.` },
-    critique: { icon: "🚨", title: "Réseau global en état critique", text: `Seulement ${ok} des ${actifs} sites sont opérationnels.` },
+    excellent: { Icon: Trophy, title: "Réseau global en excellente santé", text: "La majorité des sites RESINA sont opérationnels." },
+    bon: { Icon: ThumbsUp, title: "Réseau global en bonne santé", text: `${ok} des ${actifs} sites actifs sont opérationnels.` },
+    surveiller: { Icon: TriangleAlert, title: "Réseau global à surveiller", text: `Seulement ${ok} des ${actifs} sites sont opérationnels.` },
+    critique: { Icon: Siren, title: "Réseau global en état critique", text: `Seulement ${ok} des ${actifs} sites sont opérationnels.` },
   };
   const summary = summaryTexts[etatGlobal];
 
@@ -126,9 +130,9 @@ function DashboardPage() {
   return (
     <>
       <div className="dashboard-topbar">
-        <button className="topbar-collapse-btn" onClick={() => setReduit(!reduit)}>☰</button>
+        <button className="topbar-collapse-btn" onClick={() => setReduit(!reduit)}><Menu size={18} /></button>
         <div className="topbar-titles">
-          <h1 className="topbar-title-welcome">Bienvenue, {nomAdmin} <span className="wave">👋</span></h1>
+          <h1 className="topbar-title-welcome">Bienvenue, {nomAdmin} <Sparkle size={16} className="wave" /></h1>
           <p className="topbar-subtitle">GéoPortail RESINA — Supervision simplifiée du réseau national</p>
         </div>
         <div className="topbar-actions">
@@ -141,7 +145,7 @@ function DashboardPage() {
           </div>
           <button className="topbar-icon-btn" title="Alertes — voir l'historique des incidents"
             onClick={() => irOuRemonterEnHaut("/backoffice/incidents-historique")}>
-            🔔
+            <Bell size={17} />
             {enAnomalie.length > 0 && (
               <span className="topbar-badge topbar-badge-orange">
                 {enAnomalie.length > 99 ? "99+" : enAnomalie.length}
@@ -167,7 +171,7 @@ function DashboardPage() {
         {/* KPI */}
         <div className="kpi-grid-v2">
           <div className="kpi-card-v2">
-            <div className="kpi-card-icon kpi-icon-blue">🏢</div>
+            <div className="kpi-card-icon kpi-icon-blue"><Building2 size={22} /></div>
             <div>
               <div className="kpi-card-label">SITES CONFIGURÉS</div>
               <div className="kpi-card-value">{total}</div>
@@ -175,7 +179,7 @@ function DashboardPage() {
             </div>
           </div>
           <div className="kpi-card-v2">
-            <div className="kpi-card-icon kpi-icon-green">✓</div>
+            <div className="kpi-card-icon kpi-icon-green"><Check size={22} /></div>
             <div>
               <div className="kpi-card-label">SITES OPÉRATIONNELS</div>
               <div className="kpi-card-value kpi-value-green">{ok}</div>
@@ -183,7 +187,7 @@ function DashboardPage() {
             </div>
           </div>
           <div className="kpi-card-v2">
-            <div className="kpi-card-icon kpi-icon-orange">⚠</div>
+            <div className="kpi-card-icon kpi-icon-orange"><TriangleAlert size={22} /></div>
             <div>
               <div className="kpi-card-label">SITES DÉGRADÉS</div>
               <div className="kpi-card-value kpi-value-orange">{warn}</div>
@@ -191,7 +195,7 @@ function DashboardPage() {
             </div>
           </div>
           <div className="kpi-card-v2">
-            <div className="kpi-card-icon kpi-icon-red">✕</div>
+            <div className="kpi-card-icon kpi-icon-red"><X size={22} /></div>
             <div>
               <div className="kpi-card-label">SITES HORS SERVICE</div>
               <div className="kpi-card-value kpi-value-red">{ko}</div>
@@ -199,7 +203,7 @@ function DashboardPage() {
             </div>
           </div>
           <div className="kpi-card-v2">
-            <div className="kpi-card-icon kpi-icon-navy">🔌</div>
+            <div className="kpi-card-icon kpi-icon-navy"><Plug size={22} /></div>
             <div>
               <div className="kpi-card-label">ÉQUIPEMENTS SUPERVISÉS</div>
               <div className="kpi-card-value">{equipementsTotal.toLocaleString("fr-FR")}</div>
@@ -211,7 +215,7 @@ function DashboardPage() {
         {/* Santé globale */}
         <div className="health-panel">
           <div className="health-panel-header">
-            <span className="health-icon">💚</span>
+            <span className="health-icon"><Activity size={18} /></span>
             <h2>Santé globale du réseau RESINA</h2>
           </div>
           <div className="health-panel-body">
@@ -258,7 +262,7 @@ function DashboardPage() {
             </div>
 
             <div className={`health-summary summary-${etatGlobal}`}>
-              <div className="health-summary-icon">{summary.icon}</div>
+              <div className="health-summary-icon"><summary.Icon size={24} /></div>
               <div>
                 <div className="health-summary-title">{summary.title}</div>
                 <div className="health-summary-text">{summary.text}</div>
@@ -273,12 +277,12 @@ function DashboardPage() {
         {/* Sites en anomalie */}
         <div className="panel attention-panel">
           <div className="panel-header">
-            <h2>🔔 Sites nécessitant une attention <span className="attention-count">{enAnomalie.length}</span></h2>
+            <h2><Bell size={16} className="panel-title-icon" /> Sites nécessitant une attention <span className="attention-count">{enAnomalie.length}</span></h2>
             <div className="panel-header-actions">
               <button className="btn-outline" onClick={charger} disabled={chargement}>
-                {chargement ? "⟳ Actualisation..." : "⟳ Actualiser"}
+                <RefreshCw size={13} className={chargement ? "spin-icon" : ""} /> {chargement ? "Actualisation..." : "Actualiser"}
               </button>
-              <button className="btn-outline" onClick={exporterCSV}>⬇ Exporter</button>
+              <button className="btn-outline" onClick={exporterCSV}><Download size={13} /> Exporter</button>
               <input type="text" placeholder="Rechercher un site…" className="attention-search"
                 value={rechercheAnomalie} onChange={(e) => setRechercheAnomalie(e.target.value)} />
             </div>
@@ -301,20 +305,20 @@ function DashboardPage() {
               <tbody>
                 {anomalieFiltree.slice(0, 10).map((site) => (
                   <tr key={site.siteId}>
-                    <td><div className="site-name-cell">🏢 {site.nom}</div></td>
+                    <td><div className="site-name-cell"><Building2 size={13} /> {site.nom}</div></td>
                     <td>{site.ville}</td>
                     <td>
                       <span className={`status-pill ${site.statutAnptic === "KO" ? "pill-ko" : site.statutAnptic === "WARN" ? "pill-warn" : "pill-ok"}`}>
-                        ● {site.statutAnptic === "KO" ? "Hors service" : site.statutAnptic === "WARN" ? "Dégradé" : "Normal"}
+                        <Circle size={8} fill="currentColor" stroke="none" /> {site.statutAnptic === "KO" ? "Hors service" : site.statutAnptic === "WARN" ? "Dégradé" : "Normal"}
                       </span>
                     </td>
                     <td>
                       <span className={`status-pill ${site.statutLan === "KO" ? "pill-ko" : site.statutLan === "WARN" ? "pill-warn" : "pill-ok"}`}>
-                        ● {site.statutLan === "KO" ? "Hors service" : site.statutLan === "WARN" ? "Dégradé" : "Normal"}
+                        <Circle size={8} fill="currentColor" stroke="none" /> {site.statutLan === "KO" ? "Hors service" : site.statutLan === "WARN" ? "Dégradé" : "Normal"}
                       </span>
                     </td>
                     <td className="alerte-cell">{heureMaj}</td>
-                    <td><Link to="/backoffice/sites" className="btn-voir">👁 Voir</Link></td>
+                    <td><Link to="/backoffice/sites" className="btn-voir"><Eye size={13} /> Voir</Link></td>
                   </tr>
                 ))}
               </tbody>

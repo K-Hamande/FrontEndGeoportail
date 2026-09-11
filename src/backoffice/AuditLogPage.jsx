@@ -1,4 +1,8 @@
 import { useEffect, useState } from "react";
+import {
+  Trash2, Ban, PauseCircle, PlayCircle, Sparkles, RotateCcw, KeyRound, Pencil, FileText,
+  ScrollText, X, Download, CalendarDays, Clock, TrendingUp, Users,
+} from "lucide-react";
 import { useAuth } from "../shared/AuthContext";
 import { adminGet } from "../shared/backofficeApiClient";
 import Topbar from "./Topbar";
@@ -54,17 +58,17 @@ function libelleJour(dateIso) {
 // contiennent tous les deux la sous-chaine "activation", donc ils sont
 // testes avant le cas generique "activation".
 const CATEGORIES_ACTION = [
-  { key: "suppression", test: /suppression/i, label: "Suppression", icon: "🗑️", color: "#D93535" },
-  { key: "revocation", test: /révocation/i, label: "Révocation", icon: "🚫", color: "#D93535" },
-  { key: "desactivation", test: /désactivation/i, label: "Désactivation", icon: "⏸️", color: "#C97C0A" },
-  { key: "reactivation", test: /réactivation/i, label: "Réactivation", icon: "▶️", color: "#0D9B5A" },
-  { key: "activation", test: /activation/i, label: "Activation", icon: "▶️", color: "#0D9B5A" },
-  { key: "creation", test: /création/i, label: "Création", icon: "✨", color: "#0D9B5A" },
-  { key: "reinitialisation", test: /réinitialisation/i, label: "Réinitialisation", icon: "🔄", color: "#C97C0A" },
-  { key: "motdepasse", test: /mot de passe/i, label: "Mot de passe", icon: "🔑", color: "#4A9EFF" },
-  { key: "modification", test: /modification|coordonnées/i, label: "Modification", icon: "✏️", color: "#0A3D7A" },
+  { key: "suppression", test: /suppression/i, label: "Suppression", Icon: Trash2, color: "#D93535" },
+  { key: "revocation", test: /révocation/i, label: "Révocation", Icon: Ban, color: "#D93535" },
+  { key: "desactivation", test: /désactivation/i, label: "Désactivation", Icon: PauseCircle, color: "#C97C0A" },
+  { key: "reactivation", test: /réactivation/i, label: "Réactivation", Icon: PlayCircle, color: "#0D9B5A" },
+  { key: "activation", test: /activation/i, label: "Activation", Icon: PlayCircle, color: "#0D9B5A" },
+  { key: "creation", test: /création/i, label: "Création", Icon: Sparkles, color: "#0D9B5A" },
+  { key: "reinitialisation", test: /réinitialisation/i, label: "Réinitialisation", Icon: RotateCcw, color: "#C97C0A" },
+  { key: "motdepasse", test: /mot de passe/i, label: "Mot de passe", Icon: KeyRound, color: "#4A9EFF" },
+  { key: "modification", test: /modification|coordonnées/i, label: "Modification", Icon: Pencil, color: "#0A3D7A" },
 ];
-const CATEGORIE_AUTRE = { key: "autre", label: "Autre", icon: "📄", color: "#6B7280" };
+const CATEGORIE_AUTRE = { key: "autre", label: "Autre", Icon: FileText, color: "#6B7280" };
 
 function categoriser(action) {
   return CATEGORIES_ACTION.find((c) => c.test.test(action)) || CATEGORIE_AUTRE;
@@ -218,7 +222,7 @@ function AuditLogPage() {
             {/* KPI */}
             <div className="kpi-grid-v2" style={{ marginBottom: "20px" }}>
               <div className="kpi-card-v2">
-                <div className="kpi-card-icon kpi-icon-navy">📜</div>
+                <div className="kpi-card-icon kpi-icon-navy"><ScrollText size={22} /></div>
                 <div>
                   <div className="kpi-card-label">ÉVÉNEMENTS SUIVIS</div>
                   <div className="kpi-card-value">{entries.length}</div>
@@ -226,7 +230,7 @@ function AuditLogPage() {
                 </div>
               </div>
               <div className="kpi-card-v2">
-                <div className="kpi-card-icon kpi-icon-blue">🕐</div>
+                <div className="kpi-card-icon kpi-icon-blue"><Clock size={22} /></div>
                 <div>
                   <div className="kpi-card-label">AUJOURD'HUI</div>
                   <div className="kpi-card-value">{nbAujourdHui}</div>
@@ -234,7 +238,7 @@ function AuditLogPage() {
                 </div>
               </div>
               <div className="kpi-card-v2">
-                <div className="kpi-card-icon kpi-icon-green">📈</div>
+                <div className="kpi-card-icon kpi-icon-green"><TrendingUp size={22} /></div>
                 <div>
                   <div className="kpi-card-label">7 DERNIERS JOURS</div>
                   <div className="kpi-card-value">{nb7Jours}</div>
@@ -242,7 +246,7 @@ function AuditLogPage() {
                 </div>
               </div>
               <div className="kpi-card-v2">
-                <div className="kpi-card-icon kpi-icon-orange">👥</div>
+                <div className="kpi-card-icon kpi-icon-orange"><Users size={22} /></div>
                 <div>
                   <div className="kpi-card-label">UTILISATEURS ACTIFS</div>
                   <div className="kpi-card-value">{utilisateursActifs}</div>
@@ -266,7 +270,7 @@ function AuditLogPage() {
                           cursor: "pointer",
                           background: filtreType === cat.key ? "#F0F4FB" : "white",
                         }}>
-                        <div className="eq-stat-icon">{cat.icon}</div>
+                        <div className="eq-stat-icon"><cat.Icon size={20} /></div>
                         <div style={{ flex: 1 }}>
                           <div className="eq-stat-label">{cat.label.toUpperCase()}</div>
                           <div className="eq-stat-value">{cat.count}</div>
@@ -286,7 +290,7 @@ function AuditLogPage() {
 
         <div className="panel">
           <div className="panel-header" style={{ flexWrap: "wrap", gap: "8px" }}>
-            <h2>🗓️ Frise des événements <span className="attention-count" style={{ background: "var(--bo-primary)" }}>{entriesFiltrees.length}</span></h2>
+            <h2><CalendarDays size={16} className="panel-title-icon" /> Frise des événements <span className="attention-count" style={{ background: "var(--bo-primary)" }}>{entriesFiltrees.length}</span></h2>
             <div className="panel-header-actions" style={{ flexWrap: "wrap", gap: "8px" }}>
               <input
                 className="attention-search"
@@ -306,10 +310,10 @@ function AuditLogPage() {
               </div>
 
               {aDesFiltres && (
-                <button className="btn-outline" onClick={effacerFiltres}>✕ Effacer les filtres</button>
+                <button className="btn-outline" onClick={effacerFiltres}><X size={13} /> Effacer les filtres</button>
               )}
 
-              <button className="btn-outline" onClick={exporter}>⬇ Exporter</button>
+              <button className="btn-outline" onClick={exporter}><Download size={13} /> Exporter</button>
             </div>
           </div>
 
@@ -327,7 +331,7 @@ function AuditLogPage() {
                   return (
                     <div key={entry.id} className="audit-entry">
                       <div className="audit-icon-bubble" style={{ background: cat.color + "1A", color: cat.color }}>
-                        {cat.icon}
+                        <cat.Icon size={15} />
                       </div>
                       <div style={{ flex: 1, minWidth: 0 }}>
                         <div className="audit-line">

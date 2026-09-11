@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useOutletContext } from "react-router-dom";
+import { Menu, Building2, X, Pencil, RefreshCw, Pause, Play, ChevronLeft, ChevronRight, Circle } from "lucide-react";
 import { useAuth } from "../shared/AuthContext";
 import { adminGet, adminPost } from "../shared/backofficeApiClient";
 import SearchableSelect from "../shared/SearchableSelect";
@@ -134,7 +135,7 @@ function SitesPage() {
   return (
     <>
       <div className="dashboard-topbar">
-        <button className="topbar-collapse-btn" onClick={() => setReduit(!reduit)} aria-label="Basculer la barre latérale">☰</button>
+        <button className="topbar-collapse-btn" onClick={() => setReduit(!reduit)} aria-label="Basculer la barre latérale"><Menu size={18} /></button>
         <div className="topbar-titles">
           <h1 className="topbar-title-welcome">Gestion des sites</h1>
           <p className="topbar-subtitle">{sites.length} sites configurés sur le réseau RESINA</p>
@@ -147,7 +148,7 @@ function SitesPage() {
               <div className="topbar-live-sub">Données actualisées à {heureMaj}</div>
             </div>
           </div>
-          <button className="topbar-refresh" onClick={charger}>⟳ Actualiser</button>
+          <button className="topbar-refresh" onClick={charger}><RefreshCw size={13} /> Actualiser</button>
           <div className="topbar-user">
             <div className="topbar-user-avatar">{initiales}</div>
             <div className="topbar-user-info">
@@ -163,7 +164,7 @@ function SitesPage() {
 
         <div className="panel attention-panel">
           <div className="panel-header" style={{ flexWrap: "wrap", gap: "8px" }}>
-            <h2>🏢 Sites configurés <span className="attention-count" style={{ background: "var(--bo-primary)" }}>{sitesFiltres.length}</span></h2>
+            <h2><Building2 size={16} className="panel-title-icon" /> Sites configurés <span className="attention-count" style={{ background: "var(--bo-primary)" }}>{sitesFiltres.length}</span></h2>
             <div className="panel-header-actions" style={{ flexWrap: "wrap", gap: "8px" }}>
               <input
                 className="attention-search"
@@ -205,7 +206,7 @@ function SitesPage() {
               </div>
 
               {aDesFiltres && (
-                <button className="btn-outline" onClick={effacerFiltres}>✕ Effacer les filtres</button>
+                <button className="btn-outline" onClick={effacerFiltres}><X size={13} /> Effacer les filtres</button>
               )}
 
               <Link to="/backoffice/sites/new" className="topbar-refresh" style={{ textDecoration: "none", display: "inline-flex", alignItems: "center" }}>
@@ -233,7 +234,7 @@ function SitesPage() {
                 <tbody>
                   {sitesPage.map((site) => (
                     <tr key={site.siteId}>
-                      <td><div className="site-name-cell">🏢 {site.nom}</div></td>
+                      <td><div className="site-name-cell"><Building2 size={13} /> {site.nom}</div></td>
                       <td>
                         <div>{site.ville}</div>
                         <div className="site-location-cell">
@@ -249,14 +250,14 @@ function SitesPage() {
                       <td>{site.nombreEquipements ?? 0}</td>
                       <td>
                         <span className={`status-pill ${site.actif ? "pill-ok" : "pill-ko"}`}>
-                          ● {site.actif ? "Actif" : "Inactif"}
+                          <Circle size={8} fill="currentColor" stroke="none" /> {site.actif ? "Actif" : "Inactif"}
                         </span>
                       </td>
                       <td>
                         <div style={{ display: "flex", gap: "6px", flexWrap: "nowrap" }}>
-                          <Link to={`/backoffice/sites/${site.siteId}/edit`} className="btn-voir" style={{ whiteSpace: "nowrap", flexShrink: 0 }}>✏️ Modifier</Link>
+                          <Link to={`/backoffice/sites/${site.siteId}/edit`} className="btn-voir" style={{ whiteSpace: "nowrap", flexShrink: 0 }}><Pencil size={13} /> Modifier</Link>
                           <button className="btn-voir" style={{ whiteSpace: "nowrap", flexShrink: 0 }} onClick={() => toggleActive(site)}>
-                            {site.actif ? "⏸ Désactiver" : "▶ Activer"}
+                            {site.actif ? <><Pause size={13} /> Désactiver</> : <><Play size={13} /> Activer</>}
                           </button>
                         </div>
                       </td>
@@ -275,7 +276,7 @@ function SitesPage() {
                     onClick={() => setPageCourante(pageActuelle - 1)}
                     disabled={pageActuelle === 1}
                   >
-                    ← Précédent
+                    <ChevronLeft size={13} /> Précédent
                   </button>
                   {numerosPagesAffiches().map((n, idx) =>
                     n === "..." ? (
@@ -295,7 +296,7 @@ function SitesPage() {
                     onClick={() => setPageCourante(pageActuelle + 1)}
                     disabled={pageActuelle === totalPages}
                   >
-                    Suivant →
+                    Suivant <ChevronRight size={13} />
                   </button>
                 </div>
               </div>

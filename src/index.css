@@ -286,6 +286,33 @@ body {
 .site-hero-title { font-weight: 800; font-size: 16px; }
 .site-hero-sub { font-size: 12.5px; opacity: 0.85; margin-top: 2px; }
 
+/* Alignement icone+texte (lucide-react) : ces classes combinent toutes
+   une icone et un libelle sur la meme ligne - centrage vertical commun. */
+.status-badge,
+.error-banner-retry,
+.btn-outline,
+.btn-voir,
+.topbar-refresh,
+.pagination-btn,
+.lambda-nav-btn,
+.alert-link,
+.site-form-back,
+.user-sites-all,
+.site-name-cell,
+.role-card-highlight,
+.roles-matrix-check,
+.eq-type-badge,
+.sup-message {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.panel-title-icon { flex-shrink: 0; }
+
+.spin-icon { animation: spin-icon-rotate 0.8s linear infinite; }
+@keyframes spin-icon-rotate { to { transform: rotate(360deg); } }
+
 .status-badge { font-weight: 700; font-size: 11px; padding: 5px 12px; border-radius: 999px; white-space: nowrap; }
 .badge-ok { background: #E3F6EC; color: #53B889; }
 .badge-warn { background: #FDF1E0; color: #E2A744; }
@@ -723,7 +750,7 @@ body {
   margin-bottom: 16px;
 }
 
-.panel-header h2 { font-size: 14px; margin: 0; font-weight: 700; }
+.panel-header h2 { font-size: 14px; margin: 0; font-weight: 700; display: flex; align-items: center; gap: 6px; }
 .panel-header-actions { display: flex; gap: 10px; }
 
 .admin-table { width: 100%; border-collapse: collapse; font-size: 13px; }
@@ -805,7 +832,7 @@ body {
   margin-bottom: 16px;
 }
 
-.panel-header h2 { font-size: 15px; margin: 0; }
+.panel-header h2 { font-size: 15px; margin: 0; display: flex; align-items: center; gap: 6px; }
 
 .admin-table {
   width: 100%;

@@ -2,7 +2,8 @@ import { useEffect, useMemo, useState } from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import { apiGet } from "../shared/apiClient";
 import { buildColoredMarkerIcon } from "../shared/mapMarkers";
-import { getStatusLabel } from "../shared/statusStyles";
+import { getStatusLabel, getStatusIcon } from "../shared/statusStyles";
+import { ChevronRight } from "lucide-react";
 import { useSiteSelection } from "../shared/SiteSelectionContext";
 import ErrorBanner from "../shared/ErrorBanner";
 import DecideurLayout from "./DecideurLayout";
@@ -60,25 +61,28 @@ function CartePage() {
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
-          {sitesAvecCoordonnees.map((site) => (
-            <Marker
-              key={site.siteId}
-              position={[site.latitude, site.longitude]}
-              icon={buildColoredMarkerIcon(site.statutGlobal)}
-            >
-              <Popup>
-                <strong>{site.nom}</strong>
-                <br />
-                {site.ville}
-                <br />
-                Statut : {getStatusLabel(site.statutGlobal)}
-                <br />
-                <button type="button" className="map-popup-link" onClick={() => choisirSite(site.siteId)}>
-                  Voir ce site →
-                </button>
-              </Popup>
-            </Marker>
-          ))}
+          {sitesAvecCoordonnees.map((site) => {
+            const StatutIcone = getStatusIcon(site.statutGlobal);
+            return (
+              <Marker
+                key={site.siteId}
+                position={[site.latitude, site.longitude]}
+                icon={buildColoredMarkerIcon(site.statutGlobal)}
+              >
+                <Popup>
+                  <strong>{site.nom}</strong>
+                  <br />
+                  {site.ville}
+                  <br />
+                  Statut : <StatutIcone size={12} strokeWidth={3} style={{ verticalAlign: "-1px" }} /> {getStatusLabel(site.statutGlobal)}
+                  <br />
+                  <button type="button" className="map-popup-link" onClick={() => choisirSite(site.siteId)}>
+                    Voir ce site <ChevronRight size={13} />
+                  </button>
+                </Popup>
+              </Marker>
+            );
+          })}
         </MapContainer>
 
         {/* Visible uniquement a partir de 1024px (voir .map-sidebar en CSS) */}
@@ -97,22 +101,25 @@ function CartePage() {
           </div>
 
           <div className="map-sidebar-list">
-            {sitesFiltres.map((site) => (
-              <button
-                type="button"
-                key={site.siteId}
-                onClick={() => choisirSite(site.siteId)}
-                className="map-site-item"
-              >
-                <div>
-                  <div className="map-site-item-name">{site.nom}</div>
-                  <div className="map-site-item-ville">{site.ville}</div>
-                </div>
-                <span className={`status-badge ${badgeClassFor(site.statutGlobal)}`}>
-                  {getStatusLabel(site.statutGlobal)}
-                </span>
-              </button>
-            ))}
+            {sitesFiltres.map((site) => {
+              const StatutIcone = getStatusIcon(site.statutGlobal);
+              return (
+                <button
+                  type="button"
+                  key={site.siteId}
+                  onClick={() => choisirSite(site.siteId)}
+                  className="map-site-item"
+                >
+                  <div>
+                    <div className="map-site-item-name">{site.nom}</div>
+                    <div className="map-site-item-ville">{site.ville}</div>
+                  </div>
+                  <span className={`status-badge ${badgeClassFor(site.statutGlobal)}`}>
+                    <StatutIcone size={12} strokeWidth={3} /> {getStatusLabel(site.statutGlobal)}
+                  </span>
+                </button>
+              );
+            })}
           </div>
         </div>
       </div>

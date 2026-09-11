@@ -1,4 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
+import {
+  Users, Check, Pause, Crown, X, Pencil, KeyRound, Play, Trash2, Radio, Monitor, CircleHelp, Globe, Circle,
+} from "lucide-react";
 import { useAuth } from "../shared/AuthContext";
 import { adminGet, adminPost, adminDelete } from "../shared/backofficeApiClient";
 import UserFormModal from "./UserFormModal";
@@ -9,11 +12,11 @@ import ErrorBanner from "../shared/ErrorBanner";
 // Palette alignee sur la page Roles - meme code couleur pour que
 // l'identite visuelle d'un role soit reconnaissable d'une page a l'autre.
 const ROLE_META = {
-  SUPER_ADMIN: { label: "Super administrateur", icon: "👑", color: "#C79A2E" },
-  ADMIN_DEST: { label: "Administrateur DEST", icon: "📡", color: "#0A3D7A" },
-  ADMIN_DIG: { label: "Administrateur DIG", icon: "💻", color: "#0D9B5A" },
+  SUPER_ADMIN: { label: "Super administrateur", Icon: Crown, color: "#C79A2E" },
+  ADMIN_DEST: { label: "Administrateur DEST", Icon: Radio, color: "#0A3D7A" },
+  ADMIN_DIG: { label: "Administrateur DIG", Icon: Monitor, color: "#0D9B5A" },
 };
-const ROLE_INCONNU = { label: "Rôle inconnu", icon: "❓", color: "#6B7280" };
+const ROLE_INCONNU = { label: "Rôle inconnu", Icon: CircleHelp, color: "#6B7280" };
 
 function roleMeta(role) {
   return ROLE_META[role] ?? ROLE_INCONNU;
@@ -104,7 +107,7 @@ function UsersPage() {
         {!chargement && (
           <div className="kpi-grid-v2" style={{ marginBottom: "20px" }}>
             <div className="kpi-card-v2">
-              <div className="kpi-card-icon kpi-icon-navy">👥</div>
+              <div className="kpi-card-icon kpi-icon-navy"><Users size={22} /></div>
               <div>
                 <div className="kpi-card-label">COMPTES BACKOFFICE</div>
                 <div className="kpi-card-value">{totalComptes}</div>
@@ -112,7 +115,7 @@ function UsersPage() {
               </div>
             </div>
             <div className="kpi-card-v2">
-              <div className="kpi-card-icon kpi-icon-green">✓</div>
+              <div className="kpi-card-icon kpi-icon-green"><Check size={22} /></div>
               <div>
                 <div className="kpi-card-label">ACTIFS</div>
                 <div className="kpi-card-value kpi-value-green">{nbActifs}</div>
@@ -120,7 +123,7 @@ function UsersPage() {
               </div>
             </div>
             <div className="kpi-card-v2">
-              <div className="kpi-card-icon kpi-icon-red">⏸</div>
+              <div className="kpi-card-icon kpi-icon-red"><Pause size={22} /></div>
               <div>
                 <div className="kpi-card-label">DÉSACTIVÉS</div>
                 <div className="kpi-card-value kpi-value-red">{nbDesactives}</div>
@@ -128,7 +131,7 @@ function UsersPage() {
               </div>
             </div>
             <div className="kpi-card-v2">
-              <div className="kpi-card-icon kpi-icon-gold">👑</div>
+              <div className="kpi-card-icon kpi-icon-gold"><Crown size={22} /></div>
               <div>
                 <div className="kpi-card-label">SUPER ADMINISTRATEURS</div>
                 <div className="kpi-card-value">{nbSuperAdmins}</div>
@@ -169,7 +172,7 @@ function UsersPage() {
             </div>
             {aDesFiltres && (
               <button className="btn-outline" style={{ fontSize: "11px" }} onClick={() => { setRecherche(""); setFiltreRole(""); }}>
-                ✕ Effacer
+                <X size={12} /> Effacer
               </button>
             )}
             <span className="users-toolbar-count">{usersFiltres.length} compte{usersFiltres.length > 1 ? "s" : ""}</span>
@@ -204,7 +207,7 @@ function UsersPage() {
                     </td>
                     <td>
                       <span className="role-badge" style={{ background: meta.color + "14", color: meta.color }}>
-                        {meta.icon} {meta.label}
+                        <meta.Icon size={13} /> {meta.label}
                       </span>
                     </td>
                     <td>
@@ -215,24 +218,24 @@ function UsersPage() {
                           ))}
                         </div>
                       ) : (
-                        <span className="user-sites-all">🌐 Tous les sites</span>
+                        <span className="user-sites-all"><Globe size={12} /> Tous les sites</span>
                       )}
                     </td>
                     <td>
                       <span className={`status-pill ${user.actif ? "pill-ok" : "pill-ko"}`}>
-                        ● {user.actif ? "Actif" : "Désactivé"}
+                        <Circle size={8} fill="currentColor" stroke="none" /> {user.actif ? "Actif" : "Désactivé"}
                       </span>
                     </td>
                     <td className="table-actions">
                       <div style={{ display: "flex", gap: "6px", flexWrap: "wrap" }}>
                         <button className="user-btn user-btn-edit" onClick={() => setUserAModifier(user)}>
-                          ✏️ Modifier
+                          <Pencil size={12} /> Modifier
                         </button>
                         <button className="user-btn user-btn-reset" onClick={() => setUserResetId(user.id)}>
-                          🔑 Réinitialiser
+                          <KeyRound size={12} /> Réinitialiser
                         </button>
                         <button className="user-btn user-btn-toggle" onClick={() => toggleActive(user)}>
-                          {user.actif ? "⏸ Désactiver" : "▶ Activer"}
+                          {user.actif ? <><Pause size={12} /> Désactiver</> : <><Play size={12} /> Activer</>}
                         </button>
                         <button
                           className="user-btn user-btn-delete"
@@ -240,7 +243,7 @@ function UsersPage() {
                           title={estSoiMeme ? "Vous ne pouvez pas supprimer votre propre compte" : undefined}
                           onClick={() => supprimer(user)}
                         >
-                          🗑️ Supprimer
+                          <Trash2 size={12} /> Supprimer
                         </button>
                       </div>
                     </td>

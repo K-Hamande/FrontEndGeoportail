@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams, Link } from "react-router-dom";
+import { Building2, Tag, Plug, Info, ChevronLeft } from "lucide-react";
 import { useAuth } from "../shared/AuthContext";
 import { adminGet, adminPost } from "../shared/backofficeApiClient";
 import SearchableSelect from "../shared/SearchableSelect";
@@ -107,10 +108,10 @@ function SiteFormPage() {
 
   return (
     <div className="backoffice-content">
-      <Link to="/backoffice/sites" className="site-form-back">← Retour à la liste</Link>
+      <Link to="/backoffice/sites" className="site-form-back"><ChevronLeft size={13} /> Retour à la liste</Link>
 
       <div className="site-form-hero">
-        <span className="site-form-hero-icon">🏢</span>
+        <span className="site-form-hero-icon"><Building2 size={24} /></span>
         <div>
           <div className="site-form-hero-title">{isEdition ? "Modifier un site" : "Créer un site"}</div>
           <div className="site-form-hero-sub">
@@ -120,14 +121,14 @@ function SiteFormPage() {
       </div>
 
       <div className="info-banner">
-        ℹ️ Les informations saisies ici complètent les données collectées automatiquement par NetXMS. Elles ne modifient pas NetXMS.
+        <Info size={14} style={{ verticalAlign: "-2px" }} /> Les informations saisies ici complètent les données collectées automatiquement par NetXMS. Elles ne modifient pas NetXMS.
       </div>
 
       <ErrorBanner message={erreur} />
 
       <form onSubmit={handleSubmit}>
         <div className="panel">
-          <h2 className="site-form-section-title"><span className="icon-badge">🏷</span>Identification du site</h2>
+          <h2 className="site-form-section-title"><span className="icon-badge"><Tag size={13} /></span>Identification du site</h2>
 
           <div className="form-grid">
             <div className="form-field">
@@ -190,7 +191,7 @@ function SiteFormPage() {
 
         {isEdition && (
           <div className="panel">
-            <h2 className="site-form-section-title"><span className="icon-badge">🔌</span>Équipements LAN par étage</h2>
+            <h2 className="site-form-section-title"><span className="icon-badge"><Plug size={13} /></span>Équipements LAN par étage</h2>
 
             {recapitulatifExistant.length > 0 ? (
               <table className="admin-table" style={{ marginBottom: "16px" }}>

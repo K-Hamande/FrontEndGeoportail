@@ -1,5 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
 import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from "react-leaflet";
+import {
+  Menu, Download, RefreshCw, MapPin, Check, TriangleAlert,
+  MousePointerClick, X, Save, ChevronLeft, ChevronRight,
+} from "lucide-react";
 import { useAuth } from "../shared/AuthContext";
 import { useOutletContext } from "react-router-dom";
 import { adminGet, adminPut } from "../shared/backofficeApiClient";
@@ -192,7 +196,7 @@ function CartographyPage() {
   return (
     <>
       <div className="dashboard-topbar">
-        <button className="topbar-collapse-btn" onClick={() => setReduit(!reduit)}>☰</button>
+        <button className="topbar-collapse-btn" onClick={() => setReduit(!reduit)}><Menu size={18} /></button>
         <div className="topbar-titles">
           <h1 className="topbar-title-welcome">Cartographie</h1>
           <p className="topbar-subtitle">
@@ -202,9 +206,9 @@ function CartographyPage() {
         <div className="topbar-actions">
           <button className="btn-outline" onClick={exporterGeoJson}
             style={{ padding: "8px 14px", borderRadius: "10px", fontSize: "12px" }}>
-            ⬇ Exporter GeoJSON
+            <Download size={13} /> Exporter GeoJSON
           </button>
-          <button className="topbar-refresh" onClick={charger}>⟳ Actualiser</button>
+          <button className="topbar-refresh" onClick={charger}><RefreshCw size={13} /> Actualiser</button>
           <div className="topbar-user">
             <div className="topbar-user-avatar">{initiales}</div>
             <div className="topbar-user-info">
@@ -222,15 +226,15 @@ function CartographyPage() {
         {/* Barre de progression positionnement */}
         <div className="carto-progress-panel">
           <div className="carto-progress-header">
-            <span>📍 Progression du positionnement GPS</span>
+            <span><MapPin size={14} style={{ verticalAlign: "-2px" }} /> Progression du positionnement GPS</span>
             <span className="carto-progress-count"><strong>{nbPositionnes}</strong> / {nbTotal} sites</span>
           </div>
           <div className="carto-progress-bar">
             <div className="carto-progress-fill" style={{ width: `${pctPositionnes}%` }}></div>
           </div>
           <div className="carto-progress-labels">
-            <span style={{ color: "var(--bo-ok)" }}>✓ {nbPositionnes} positionnés</span>
-            <span style={{ color: "var(--bo-warn)" }}>⚠ {nbTotal - nbPositionnes} à positionner</span>
+            <span style={{ color: "var(--bo-ok)", display: "inline-flex", alignItems: "center", gap: "4px" }}><Check size={13} /> {nbPositionnes} positionnés</span>
+            <span style={{ color: "var(--bo-warn)", display: "inline-flex", alignItems: "center", gap: "4px" }}><TriangleAlert size={13} /> {nbTotal - nbPositionnes} à positionner</span>
           </div>
         </div>
 
@@ -242,7 +246,7 @@ function CartographyPage() {
             <div className="carto-map-header">
               {modePositionnement ? (
                 <div className="carto-mode-actif">
-                  🖱️ Cliquez sur la carte pour positionner <strong>{siteSelectionne?.nom}</strong>
+                  <MousePointerClick size={14} style={{ verticalAlign: "-2px" }} /> Cliquez sur la carte pour positionner <strong>{siteSelectionne?.nom}</strong>
                   <button className="btn-outline" style={{ marginLeft: "12px", fontSize: "11px" }}
                     onClick={() => setModePositionnement(false)}>Annuler</button>
                 </div>
@@ -292,7 +296,7 @@ function CartographyPage() {
                 <div className="carto-position-header">
                   <h3>{siteSelectionne.nom}</h3>
                   <span className={`status-pill ${siteSelectionne.positionne ? "pill-ok" : "pill-warn"}`}>
-                    {siteSelectionne.positionne ? "✓ Positionné" : "⚠ À positionner"}
+                    {siteSelectionne.positionne ? <><Check size={12} /> Positionné</> : <><TriangleAlert size={12} /> À positionner</>}
                   </span>
                 </div>
 
@@ -318,13 +322,13 @@ function CartographyPage() {
                   <button className="topbar-refresh"
                     onClick={() => setModePositionnement(!modePositionnement)}
                     style={{ fontSize: "12px", flex: 1 }}>
-                    {modePositionnement ? "✕ Annuler le clic" : "📍 Cliquer sur la carte"}
+                    {modePositionnement ? <><X size={13} /> Annuler le clic</> : <><MapPin size={13} /> Cliquer sur la carte</>}
                   </button>
                   <button className="btn-primary"
                     disabled={enregistrement || brouillon.latitude == null}
                     onClick={enregistrer}
                     style={{ fontSize: "12px", flex: 1, padding: "8px", borderRadius: "10px" }}>
-                    {enregistrement ? "Enregistrement…" : "💾 Enregistrer"}
+                    {enregistrement ? "Enregistrement…" : <><Save size={13} /> Enregistrer</>}
                   </button>
                 </div>
               </div>
@@ -380,7 +384,7 @@ function CartographyPage() {
                     className={`pagination-btn ${filtreStatut === v ? "pagination-btn-active" : ""}`}
                     style={{ flex: 1, fontSize: "11px" }}
                     onClick={() => { setFiltreStatut(v); setPageCourante(1); }}>
-                    {v === "" ? "Tous" : v === "positionne" ? "✓ Positionnés" : "⚠ À faire"}
+                    {v === "" ? "Tous" : v === "positionne" ? <><Check size={11} /> Positionnés</> : <><TriangleAlert size={11} /> À faire</>}
                   </button>
                 ))}
               </div>
@@ -392,7 +396,7 @@ function CartographyPage() {
                     setFiltreMinistere(""); setFiltreStatut(""); setRecherche("");
                     setProvinces(stats?.provinces || []); setVilles(stats?.villes || []);
                     setPageCourante(1);
-                  }}>✕ Effacer les filtres</button>
+                  }}><X size={12} /> Effacer les filtres</button>
               )}
 
               <div className="map-sidebar-count" style={{ marginTop: "6px" }}>
@@ -413,7 +417,7 @@ function CartographyPage() {
                   </div>
                   <span className={`status-pill ${item.positionne ? "pill-ok" : "pill-warn"}`}
                     style={{ fontSize: "10px", padding: "2px 8px" }}>
-                    {item.positionne ? "✓" : "⚠"}
+                    {item.positionne ? <Check size={11} /> : <TriangleAlert size={11} />}
                   </span>
                 </button>
               ))}
@@ -423,12 +427,12 @@ function CartographyPage() {
             {totalPages > 1 && (
               <div className="pagination-bar" style={{ padding: "8px 4px" }}>
                 <button className="pagination-btn" onClick={() => setPageCourante(pageActuelle - 1)}
-                  disabled={pageActuelle === 1}>←</button>
+                  disabled={pageActuelle === 1}><ChevronLeft size={14} /></button>
                 <span style={{ fontSize: "11px", color: "var(--bo-ink-muted)" }}>
                   {pageActuelle} / {totalPages}
                 </span>
                 <button className="pagination-btn" onClick={() => setPageCourante(pageActuelle + 1)}
-                  disabled={pageActuelle === totalPages}>→</button>
+                  disabled={pageActuelle === totalPages}><ChevronRight size={14} /></button>
               </div>
             )}
           </div>

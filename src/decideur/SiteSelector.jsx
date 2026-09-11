@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import { ChevronUp, ChevronDown } from "lucide-react";
 
 function SiteSelector({ sites, siteId, onChange }) {
   const [ouvert, setOuvert] = useState(false);
@@ -83,7 +84,7 @@ function SiteSelector({ sites, siteId, onChange }) {
           </div>
         )}
       </div>
-      <span style={{ opacity: 0.7 }}>{ouvert ? "︿" : "⌄"}</span>
+      <span style={{ opacity: 0.7, display: "inline-flex" }}>{ouvert ? <ChevronUp size={14} /> : <ChevronDown size={14} />}</span>
     </div>
   );
 }

@@ -1,3 +1,5 @@
+import { TriangleAlert, RotateCcw } from "lucide-react";
+
 // Bandeau d'erreur reutilisable, a la place du <p style={{color: ...}}>
 // Erreur : {erreur}</p> disperse dans toutes les pages. `onRetry` est
 // optionnel (omis quand il n'y a pas de fonction de rechargement
@@ -7,14 +9,14 @@ function ErrorBanner({ message, onRetry }) {
 
   return (
     <div className="error-banner">
-      <span className="error-banner-icon">⚠</span>
+      <span className="error-banner-icon"><TriangleAlert size={18} /></span>
       <div className="error-banner-texts">
         <div className="error-banner-title">Une erreur est survenue</div>
         <div className="error-banner-message">{message}</div>
       </div>
       {onRetry && (
         <button type="button" className="error-banner-retry" onClick={onRetry}>
-          ↺ Réessayer
+          <RotateCcw size={13} /> Réessayer
         </button>
       )}
     </div>

@@ -1,11 +1,14 @@
 import { useState } from "react";
 import { NavLink, Outlet, useLocation } from "react-router-dom";
+import {
+  Menu, Building2, Package, SlidersHorizontal, Users, Bell, ScrollText, ChevronRight,
+} from "lucide-react";
 import { useAuth } from "../shared/AuthContext";
 
 // Composant "menu depliable" pour les rubriques a sous-elements
 // (Sites & Equipements, Supervision). Deplie automatiquement si l'URL
 // courante correspond a l'un de ses enfants.
-function SidebarGroup({ icon, label, children, urls }) {
+function SidebarGroup({ Icon, label, children, urls }) {
   const location = useLocation();
   const contientPageActive = urls.some((u) => location.pathname === u || location.pathname.startsWith(u + "/"));
   const [ouvert, setOuvert] = useState(contientPageActive);
@@ -13,9 +16,9 @@ function SidebarGroup({ icon, label, children, urls }) {
   return (
     <div className={`sidebar-group ${ouvert ? "open" : ""}`}>
       <button type="button" className="sidebar-link sidebar-group-toggle" onClick={() => setOuvert((v) => !v)}>
-        <span className="sidebar-link-icon">{icon}</span>
+        <span className="sidebar-link-icon"><Icon size={17} /></span>
         <span className="sidebar-link-label">{label}</span>
-        <span className="sidebar-group-caret">▸</span>
+        <ChevronRight size={12} className="sidebar-group-caret" />
       </button>
       {ouvert && <div className="sidebar-group-children">{children}</div>}
     </div>
@@ -32,7 +35,7 @@ function BackofficeLayout() {
   return (
     <div className={`backoffice-shell ${reduit ? "sidebar-reduced" : ""}`}>
       <div className="mobile-topbar">
-        <button className="mobile-menu-btn" onClick={() => setMenuOuvert(true)} aria-label="Ouvrir le menu">☰</button>
+        <button className="mobile-menu-btn" onClick={() => setMenuOuvert(true)} aria-label="Ouvrir le menu"><Menu size={19} /></button>
         <span className="mobile-topbar-title">GéoPortail RESINA</span>
       </div>
 
@@ -63,11 +66,11 @@ function BackofficeLayout() {
 
         <nav className="sidebar-nav" onClick={(e) => { if (e.target.closest("a")) setMenuOuvert(false); }}>
           <NavLink to="/backoffice" end className={linkClass}>
-            <span className="sidebar-link-icon">🏢</span><span className="sidebar-link-label">Tableau de bord</span>
+            <span className="sidebar-link-icon"><Building2 size={17} /></span><span className="sidebar-link-label">Tableau de bord</span>
           </NavLink>
 
           <SidebarGroup
-            icon="📦"
+            Icon={Package}
             label="Sites & Équipements"
             urls={["/backoffice/sites", "/backoffice/equipments", "/backoffice/cartography"]}
           >
@@ -83,7 +86,7 @@ function BackofficeLayout() {
           </SidebarGroup>
 
           <SidebarGroup
-            icon="🎛️"
+            Icon={SlidersHorizontal}
             label="Supervision"
             urls={["/backoffice/supervision", "/backoffice/ministry-tokens", "/backoffice/incidents-historique"]}
           >
@@ -93,18 +96,18 @@ function BackofficeLayout() {
             {/* <NavLink to="/backoffice/ministry-tokens" className={linkClass}>
               <span className="sidebar-link-icon">·</span><span className="sidebar-link-label">Liens Ministères</span>
             </NavLink> */}
-                      <NavLink to="/backoffice/decideur-users" className={linkClass}><span className="sidebar-link-icon">👥</span><span className="sidebar-link-label">Comptes Décideurs</span></NavLink>
+                      <NavLink to="/backoffice/decideur-users" className={linkClass}><span className="sidebar-link-icon"><Users size={16} /></span><span className="sidebar-link-label">Comptes Décideurs</span></NavLink>
             <NavLink to="/backoffice/incidents-historique" className={linkClass}>
               <span className="sidebar-link-icon">·</span><span className="sidebar-link-label">Historique des incidents</span>
             </NavLink>
           </SidebarGroup>
 
           <NavLink to="/backoffice/notifications" className={linkClass}>
-            <span className="sidebar-link-icon">🔔</span><span className="sidebar-link-label">Notifications Push</span>
+            <span className="sidebar-link-icon"><Bell size={17} /></span><span className="sidebar-link-label">Notifications Push</span>
           </NavLink>
 
           <SidebarGroup
-            icon="👥"
+            Icon={Users}
             label="Utilisateurs"
             urls={["/backoffice/mon-profil", "/backoffice/users", "/backoffice/roles"]}
           >
@@ -120,7 +123,7 @@ function BackofficeLayout() {
           </SidebarGroup>
 
           <NavLink to="/backoffice/audit-log" className={linkClass}>
-            <span className="sidebar-link-icon">📜</span><span className="sidebar-link-label">Journal d'activité</span>
+            <span className="sidebar-link-icon"><ScrollText size={17} /></span><span className="sidebar-link-label">Journal d'activité</span>
           </NavLink>
         </nav>
 

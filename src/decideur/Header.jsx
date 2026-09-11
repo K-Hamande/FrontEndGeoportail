@@ -1,3 +1,5 @@
+import { LogOut } from "lucide-react";
+
 function Header({ nav, children, onLogout, nomComplet, role }) {
   return (
     <header className="app-header">
@@ -20,7 +22,7 @@ function Header({ nav, children, onLogout, nomComplet, role }) {
           <div className="header-user">
             <span className="header-user-name">{nomComplet}</span>
             <span className="header-user-role">{role === "LAMBDA" ? "Observateur" : "Décideur"}</span>
-            <button className="header-logout-btn" onClick={onLogout} title="Se déconnecter">⏻</button>
+            <button className="header-logout-btn" onClick={onLogout} title="Se déconnecter"><LogOut size={15} /></button>
           </div>
         )}
       </div>

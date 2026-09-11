@@ -1,4 +1,8 @@
 import { useEffect, useState } from "react";
+import {
+  TriangleAlert, Check, Search, Star, Circle, Settings, Clock, Signal, Zap,
+  Bell, Radio, Building2, CheckCheck, RotateCcw,
+} from "lucide-react";
 import { useAuth } from "../shared/AuthContext";
 import { adminGet, adminPut, adminDelete } from "../shared/backofficeApiClient";
 import Topbar from "./Topbar";
@@ -101,14 +105,14 @@ function SupervisionPage() {
       <Topbar title="Paramètres supervision" subtitle="Seuils d'alerte, intervalle d'actualisation et notifications par site" onRefresh={charger} />
 
       <div className="backoffice-content">
-        {erreur && <p className="sup-message ko">⚠ Erreur : {erreur}</p>}
-        {message && <p className="sup-message ok">✓ {message}</p>}
+        {erreur && <p className="sup-message ko"><TriangleAlert size={14} /> Erreur : {erreur}</p>}
+        {message && <p className="sup-message ok"><Check size={14} /> {message}</p>}
 
         <div className="sup-layout">
           {/* ---- Colonne de gauche : recherche + liste de sites ---- */}
           <div className="sup-picker">
             <div className="sup-search">
-              <span className="sup-search-icon">🔍</span>
+              <span className="sup-search-icon"><Search size={14} /></span>
               <input
                 type="text"
                 placeholder="Rechercher un site…"
@@ -147,15 +151,15 @@ function SupervisionPage() {
                 <div className="sup-hero-sub">{brouillon.ville}</div>
               </div>
               <span className={`sup-hero-badge ${brouillon.personnalise ? "personnalise" : ""}`}>
-                {brouillon.personnalise ? "★ Personnalisé" : "○ Valeurs par défaut"}
+                {brouillon.personnalise ? <><Star size={12} /> Personnalisé</> : <><Circle size={12} /> Valeurs par défaut</>}
               </span>
             </div>
 
-            <h2 className="sup-section-title">⚙ Seuils et actualisation</h2>
+            <h2 className="sup-section-title"><Settings size={15} /> Seuils et actualisation</h2>
             <div className="sup-metric-grid">
               <div className="sup-metric-card">
                 <div className="sup-metric-head">
-                  <span className="sup-metric-icon kpi-icon-navy">⏱</span>
+                  <span className="sup-metric-icon kpi-icon-navy"><Clock size={16} /></span>
                   <span className="sup-metric-label">Intervalle d'actualisation</span>
                 </div>
                 <div className="sup-metric-input-row">
@@ -172,7 +176,7 @@ function SupervisionPage() {
 
               <div className="sup-metric-card">
                 <div className="sup-metric-head">
-                  <span className="sup-metric-icon kpi-icon-blue">📶</span>
+                  <span className="sup-metric-icon kpi-icon-blue"><Signal size={16} /></span>
                   <span className="sup-metric-label">Débit minimal acceptable</span>
                 </div>
                 <div className="sup-metric-input-row">
@@ -190,7 +194,7 @@ function SupervisionPage() {
 
               <div className="sup-metric-card">
                 <div className="sup-metric-head">
-                  <span className="sup-metric-icon kpi-icon-orange">⚡</span>
+                  <span className="sup-metric-icon kpi-icon-orange"><Zap size={16} /></span>
                   <span className="sup-metric-label">Latence maximale acceptable</span>
                 </div>
                 <div className="sup-metric-input-row">
@@ -207,10 +211,10 @@ function SupervisionPage() {
               </div>
             </div>
 
-            <h2 className="sup-section-title">🔔 Notifications push</h2>
+            <h2 className="sup-section-title"><Bell size={15} /> Notifications push</h2>
             <div className="sup-toggle-panel">
               <div className="sup-toggle-row principal">
-                <span className="sup-toggle-icon">🔔</span>
+                <span className="sup-toggle-icon"><Bell size={17} /></span>
                 <span className="sup-toggle-texts">
                   <span className="sup-toggle-title">Notifications activées pour ce site</span>
                   <span className="sup-toggle-desc">Interrupteur général — désactive tout le reste si éteint.</span>
@@ -226,7 +230,7 @@ function SupervisionPage() {
               </div>
 
               <div className={`sup-toggle-row ${brouillon.notificationsActives ? "" : "dim"}`}>
-                <span className="sup-toggle-icon">📡</span>
+                <span className="sup-toggle-icon"><Radio size={17} /></span>
                 <span className="sup-toggle-texts">
                   <span className="sup-toggle-title">Panne ANPTIC</span>
                   <span className="sup-toggle-desc">Alerte en cas de coupure de la liaison WAN (réseau national).</span>
@@ -243,7 +247,7 @@ function SupervisionPage() {
               </div>
 
               <div className={`sup-toggle-row ${brouillon.notificationsActives ? "" : "dim"}`}>
-                <span className="sup-toggle-icon">🏢</span>
+                <span className="sup-toggle-icon"><Building2 size={17} /></span>
                 <span className="sup-toggle-texts">
                   <span className="sup-toggle-title">Panne LAN</span>
                   <span className="sup-toggle-desc">Alerte en cas d'incident sur le réseau local du bâtiment.</span>
@@ -260,7 +264,7 @@ function SupervisionPage() {
               </div>
 
               <div className={`sup-toggle-row ${brouillon.notificationsActives ? "" : "dim"}`}>
-                <span className="sup-toggle-icon">✅</span>
+                <span className="sup-toggle-icon"><CheckCheck size={17} /></span>
                 <span className="sup-toggle-texts">
                   <span className="sup-toggle-title">Rétablissement</span>
                   <span className="sup-toggle-desc">Alerte dès qu'un incident est résolu (ANPTIC ou LAN).</span>
@@ -280,7 +284,7 @@ function SupervisionPage() {
             <div className="sup-actions">
               <button className="btn-primary" onClick={enregistrer}>Enregistrer</button>
               {brouillon.personnalise && (
-                <button className="btn-outline" onClick={reinitialiser}>↺ Réinitialiser aux valeurs par défaut</button>
+                <button className="btn-outline" onClick={reinitialiser}><RotateCcw size={13} /> Réinitialiser aux valeurs par défaut</button>
               )}
             </div>
           </div>

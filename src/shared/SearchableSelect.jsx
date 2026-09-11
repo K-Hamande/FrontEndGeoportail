@@ -1,4 +1,5 @@
 import { Children, useEffect, useMemo, useRef, useState } from "react";
+import { ChevronDown } from "lucide-react";
 
 // Combobox "select" avec un champ de recherche integre a l'interieur
 // du menu deroulant (et non plus au-dessus du <select>) : on clique sur
@@ -88,7 +89,7 @@ function SearchableSelect({
         <span className="searchable-select-trigger-label">
           {selection ? selection.label : "—"}
         </span>
-        <span className="searchable-select-caret">▾</span>
+        <ChevronDown size={13} className="searchable-select-caret" />
       </button>
 
       {ouvert && (

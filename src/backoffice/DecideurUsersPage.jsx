@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useAuth } from "../shared/AuthContext";
 import { adminGet, adminPost, adminPut, adminDelete } from "../shared/backofficeApiClient";
 import { useOutletContext } from "react-router-dom";
+import { Pencil, Trash2, Pause, Play } from "lucide-react";
 import Topbar from "./Topbar";
 import SearchableSelect from "../shared/SearchableSelect";
 import ErrorBanner from "../shared/ErrorBanner";
@@ -123,12 +124,12 @@ function DecideurUsersPage() {
                     </span>
                   </td>
                   <td className="table-actions">
-                    <button className="btn-voir" onClick={() => ouvrirModification(user)}>✏️ Modifier</button>
+                    <button className="btn-voir" onClick={() => ouvrirModification(user)}><Pencil size={12} /> Modifier</button>
                     <button className="btn-voir" onClick={() => toggleActive(user)}>
-                      {user.actif ? "⏸ Désactiver" : "▶ Activer"}
+                      {user.actif ? <><Pause size={12} /> Désactiver</> : <><Play size={12} /> Activer</>}
                     </button>
                     <button className="btn-voir" style={{ color: "var(--bo-ko, #D93535)" }} onClick={() => supprimer(user)}>
-                      🗑 Supprimer
+                      <Trash2 size={12} /> Supprimer
                     </button>
                   </td>
                 </tr>

@@ -1,4 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
+import {
+  Trophy, ThumbsUp, TriangleAlert, Siren,
+  CheckCircle2, XCircle, Building2, Search,
+  Check, X, ChevronLeft, ChevronRight,
+} from "lucide-react";
 import { apiGet } from "../shared/apiClient";
 import ErrorBanner from "../shared/ErrorBanner";
 import LambdaLayout from "./LambdaLayout";
@@ -58,10 +63,10 @@ function LambdaListePage() {
 
   const etat = pctOk >= 90 ? "excellent" : pctOk >= 70 ? "bon" : pctOk >= 40 ? "surveiller" : "critique";
   const RESUME_ETAT = {
-    excellent: { titre: "Réseau national en excellente santé", icone: "🏆" },
-    bon: { titre: "Réseau national en bonne santé", icone: "👍" },
-    surveiller: { titre: "Réseau national à surveiller", icone: "⚠️" },
-    critique: { titre: "Plusieurs sites hors service", icone: "🚨" },
+    excellent: { titre: "Réseau national en excellente santé", Icone: Trophy },
+    bon: { titre: "Réseau national en bonne santé", Icone: ThumbsUp },
+    surveiller: { titre: "Réseau national à surveiller", Icone: TriangleAlert },
+    critique: { titre: "Plusieurs sites hors service", Icone: Siren },
   };
   const resume = RESUME_ETAT[etat];
 
@@ -84,7 +89,7 @@ function LambdaListePage() {
             </div>
           </div>
           <div className="lambda-hero-texts">
-            <div className="lambda-hero-title">{resume.icone} {resume.titre}</div>
+            <div className="lambda-hero-title"><resume.Icone size={19} className="lambda-hero-title-icon" /> {resume.titre}</div>
             <div className="lambda-hero-sub">{totalOk} site{totalOk > 1 ? "s" : ""} opérationnel{totalOk > 1 ? "s" : ""} sur {total} au total</div>
             {heureMaj && (
               <div className="lambda-hero-live">
@@ -98,21 +103,21 @@ function LambdaListePage() {
 
       <div className="lambda-stats">
         <div className="lambda-stat-card lambda-stat-ok">
-          <span className="lambda-stat-icon">🟢</span>
+          <span className="lambda-stat-icon"><CheckCircle2 size={19} color="#0D9B5A" /></span>
           <div>
             <div className="lambda-stat-value">{totalOk}</div>
             <div className="lambda-stat-label">Opérationnels</div>
           </div>
         </div>
         <div className="lambda-stat-card lambda-stat-ko">
-          <span className="lambda-stat-icon">🔴</span>
+          <span className="lambda-stat-icon"><XCircle size={19} color="#D93535" /></span>
           <div>
             <div className="lambda-stat-value">{totalKo}</div>
             <div className="lambda-stat-label">Hors service</div>
           </div>
         </div>
         <div className="lambda-stat-card">
-          <span className="lambda-stat-icon">🏢</span>
+          <span className="lambda-stat-icon"><Building2 size={19} color="#0A3D7A" /></span>
           <div>
             <div className="lambda-stat-value">{total}</div>
             <div className="lambda-stat-label">Total sites</div>
@@ -121,7 +126,7 @@ function LambdaListePage() {
       </div>
 
       <div className="lambda-search-bar">
-        <span className="lambda-search-icon">🔍</span>
+        <span className="lambda-search-icon"><Search size={15} /></span>
         <input
           type="text"
           placeholder="Rechercher un site ou une ville…"
@@ -138,7 +143,7 @@ function LambdaListePage() {
         {sitesPage.map((site) => (
           <div key={site.siteId} className={`lambda-site-card ${site.statut === "OK" ? "lambda-card-ok" : "lambda-card-ko"}`}>
             <div className={`lambda-site-statut ${site.statut === "OK" ? "lambda-site-statut-ok" : "lambda-site-statut-ko"}`}>
-              {site.statut === "OK" ? "✓" : "✕"}
+              {site.statut === "OK" ? <Check size={16} strokeWidth={3} /> : <X size={16} strokeWidth={3} />}
             </div>
             <div className="lambda-site-info">
               <div className="lambda-site-nom">{site.nom}</div>
@@ -153,9 +158,13 @@ function LambdaListePage() {
 
       {totalPages > 1 && (
         <div className="lambda-pagination">
-          <button disabled={pageActuelle === 1} onClick={() => setPageCourante(pageActuelle - 1)}>← Précédent</button>
+          <button disabled={pageActuelle === 1} onClick={() => setPageCourante(pageActuelle - 1)}>
+            <ChevronLeft size={14} /> Précédent
+          </button>
           <span>{pageActuelle} / {totalPages}</span>
-          <button disabled={pageActuelle === totalPages} onClick={() => setPageCourante(pageActuelle + 1)}>Suivant →</button>
+          <button disabled={pageActuelle === totalPages} onClick={() => setPageCourante(pageActuelle + 1)}>
+            Suivant <ChevronRight size={14} />
+          </button>
         </div>
       )}
     </LambdaLayout>

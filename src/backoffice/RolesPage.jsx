@@ -1,3 +1,4 @@
+import { Crown, Radio, Monitor, Check, Star, ShieldCheck } from "lucide-react";
 import Topbar from "./Topbar";
 
 // Page d'information statique : GéoPortail RESINA n'a pas (encore) de
@@ -9,7 +10,7 @@ const ROLES = [
   {
     code: "SUPER_ADMIN",
     label: "Super administrateur",
-    icon: "👑",
+    Icon: Crown,
     color: "#C79A2E",
     tagline: "Le contrôle total du Backoffice",
     particularite: "Seul rôle habilité à gérer les comptes administrateurs",
@@ -22,7 +23,7 @@ const ROLES = [
   {
     code: "ADMIN_DEST",
     label: "Administrateur DEST",
-    icon: "📡",
+    Icon: Radio,
     color: "#0A3D7A",
     tagline: "Direction de l'Exploitation",
     particularite: "Gestion opérationnelle complète, sans accès aux comptes admin",
@@ -36,7 +37,7 @@ const ROLES = [
   {
     code: "ADMIN_DIG",
     label: "Administrateur DIG",
-    icon: "💻",
+    Icon: Monitor,
     color: "#0D9B5A",
     tagline: "Direction de l'Infogérance",
     particularite: "Mêmes fonctionnalités qu'ADMIN_DEST — seule la direction d'appartenance diffère",
@@ -62,7 +63,7 @@ const MATRICE = [
 
 function CelluleMatrice({ valeur }) {
   if (valeur === true) {
-    return <span className="roles-matrix-check" title="Oui">✓</span>;
+    return <span className="roles-matrix-check" title="Oui"><Check size={14} strokeWidth={3} /></span>;
   }
   if (valeur === false) {
     return <span className="roles-matrix-cross" title="Non">—</span>;
@@ -77,7 +78,7 @@ function RolesPage() {
       <div className="backoffice-content">
 
         <div className="roles-hero">
-          <div className="roles-hero-icon">🔐</div>
+          <div className="roles-hero-icon"><ShieldCheck size={26} /></div>
           <div>
             <h2 className="roles-hero-title">Rôles Backoffice</h2>
             <p className="roles-hero-text">
@@ -92,7 +93,7 @@ function RolesPage() {
             <div key={r.code} className="role-card" style={{ "--role-accent": r.color }}>
               <div className="role-card-top">
                 <div className="role-card-icon" style={{ background: r.color + "1A", color: r.color }}>
-                  {r.icon}
+                  <r.Icon size={20} />
                 </div>
                 <span className="role-card-code">{r.code}</span>
               </div>
@@ -106,7 +107,7 @@ function RolesPage() {
               </ul>
 
               <div className="role-card-highlight" style={{ background: r.color + "12", color: r.color }}>
-                ★ {r.particularite}
+                <Star size={12} /> {r.particularite}
               </div>
             </div>
           ))}

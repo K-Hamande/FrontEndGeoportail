@@ -1,3 +1,5 @@
+import { RefreshCw } from "lucide-react";
+
 function UpdateBar({ lastUpdated, onRefresh, isLoading }) {
   const formatted = lastUpdated.toLocaleString("fr-FR", {
     day: "2-digit",
@@ -13,7 +15,7 @@ function UpdateBar({ lastUpdated, onRefresh, isLoading }) {
         Mis à jour : <strong>{formatted}</strong>
       </span>
       <button className="btn-refresh" onClick={onRefresh} disabled={isLoading}>
-        <span className={isLoading ? "btn-refresh-icon spinning" : "btn-refresh-icon"}>↻</span>
+        <RefreshCw size={14} className={isLoading ? "btn-refresh-icon spinning" : "btn-refresh-icon"} />
         {isLoading ? "Actualisation..." : "Actualiser"}
       </button>
     </div>

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Eye, EyeOff } from "lucide-react";
 import { useAuth } from "../shared/AuthContext";
 import { adminGet } from "../shared/backofficeApiClient";
 
@@ -77,7 +78,7 @@ function LoginPage() {
               onClick={() => setAfficherMotDePasse((v) => !v)}
               aria-label={afficherMotDePasse ? "Masquer le mot de passe" : "Afficher le mot de passe"}
             >
-              {afficherMotDePasse ? "🙈" : "👁️"}
+              {afficherMotDePasse ? <EyeOff size={17} /> : <Eye size={17} />}
             </button>
           </div>
 

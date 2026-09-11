@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Eye, EyeOff } from "lucide-react";
 import { saveDecideurAuth } from "../shared/decideurAuth";
 
 function DecideurLoginPage() {
@@ -67,7 +68,7 @@ function DecideurLoginPage() {
               <button type="button" className="decideur-login-eye"
                 onClick={() => setAfficher((v) => !v)}
                 aria-label={afficher ? "Masquer" : "Afficher"}>
-                {afficher ? "🙈" : "👁️"}
+                {afficher ? <EyeOff size={17} /> : <Eye size={17} />}
               </button>
             </div>
           </div>

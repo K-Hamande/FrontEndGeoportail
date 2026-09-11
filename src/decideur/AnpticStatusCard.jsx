@@ -1,4 +1,5 @@
-import { getStatusLabel } from "../shared/statusStyles";
+import { Globe, Check, X } from "lucide-react";
+import { getStatusLabel, getStatusIcon } from "../shared/statusStyles";
 
 function badgeClass(status) {
   if (status === "KO") return "badge-ko";
@@ -28,19 +29,23 @@ function AnpticStatusCard({ data }) {
     return <div className="status-card">Chargement...</div>;
   }
 
+  const StatutIcon = getStatusIcon(data.status);
+
   return (
     <div className="status-card">
       <div className="card-top">
-        <div className="card-icon">🌐</div>
+        <div className="card-icon"><Globe size={19} /></div>
         <div className="card-titles">
           <div className="card-title">Réseau ANPTIC</div>
           <div className="card-subtitle">Infrastructure nationale — RESINA</div>
         </div>
-        <span className={`status-badge ${badgeClass(data.status)}`}>{getStatusLabel(data.status)}</span>
+        <span className={`status-badge ${badgeClass(data.status)}`}>
+          <StatutIcon size={12} strokeWidth={3} /> {getStatusLabel(data.status)}
+        </span>
       </div>
 
       <div className={`message-box ${boxClass(data.status)}`}>
-        <span className="message-icon">{data.disponible ? "✓" : "✕"}</span>
+        <span className="message-icon">{data.disponible ? <Check size={16} /> : <X size={16} />}</span>
         <div>
           <div className="message-title">{data.message}</div>
           <div className="message-text">

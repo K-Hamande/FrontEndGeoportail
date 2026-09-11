@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { ClipboardList, Clock, Check, Ban, TriangleAlert, Siren, X, Download, ChevronLeft, ChevronRight } from "lucide-react";
 import { useAuth } from "../shared/AuthContext";
 import { adminGet, adminGetFichier, declencherTelechargement } from "../shared/backofficeApiClient";
 import { formaterDureeMinutes } from "../shared/timeFormat";
@@ -157,7 +158,7 @@ function IncidentsHistoriquePage() {
           <h2 className="eq-stats-title">Répartition des incidents</h2>
           <div className="eq-stats-grid">
             <div className="eq-stat-card" style={{ borderTop: "3px solid #0A3D7A" }}>
-              <div className="eq-stat-icon">📋</div>
+              <div className="eq-stat-icon"><ClipboardList size={20} /></div>
               <div style={{ flex: 1 }}>
                 <div className="eq-stat-label">TOTAL SUR LA PÉRIODE</div>
                 <div className="eq-stat-value">{stats.total.toLocaleString("fr-FR")}</div>
@@ -168,7 +169,7 @@ function IncidentsHistoriquePage() {
               </div>
             </div>
             <div className="eq-stat-card" style={{ borderTop: "3px solid #D93535" }}>
-              <div className="eq-stat-icon">⏱️</div>
+              <div className="eq-stat-icon"><Clock size={20} /></div>
               <div style={{ flex: 1 }}>
                 <div className="eq-stat-label">EN COURS</div>
                 <div className="eq-stat-value">{stats.enCours.toLocaleString("fr-FR")}</div>
@@ -179,7 +180,7 @@ function IncidentsHistoriquePage() {
               </div>
             </div>
             <div className="eq-stat-card" style={{ borderTop: "3px solid #0D9B5A" }}>
-              <div className="eq-stat-icon">✓</div>
+              <div className="eq-stat-icon"><Check size={20} /></div>
               <div style={{ flex: 1 }}>
                 <div className="eq-stat-label">RÉSOLUES</div>
                 <div className="eq-stat-value">{stats.resolus.toLocaleString("fr-FR")}</div>
@@ -190,7 +191,7 @@ function IncidentsHistoriquePage() {
               </div>
             </div>
             <div className="eq-stat-card" style={{ borderTop: "3px solid var(--bo-ko)" }}>
-              <div className="eq-stat-icon">⛔</div>
+              <div className="eq-stat-icon"><Ban size={20} /></div>
               <div style={{ flex: 1 }}>
                 <div className="eq-stat-label">KO</div>
                 <div className="eq-stat-value">{stats.ko.toLocaleString("fr-FR")}</div>
@@ -201,7 +202,7 @@ function IncidentsHistoriquePage() {
               </div>
             </div>
             <div className="eq-stat-card" style={{ borderTop: "3px solid var(--bo-warn)" }}>
-              <div className="eq-stat-icon">⚠️</div>
+              <div className="eq-stat-icon"><TriangleAlert size={20} /></div>
               <div style={{ flex: 1 }}>
                 <div className="eq-stat-label">WARN</div>
                 <div className="eq-stat-value">{stats.warn.toLocaleString("fr-FR")}</div>
@@ -216,7 +217,7 @@ function IncidentsHistoriquePage() {
 
         <div className="panel">
           <div className="panel-header" style={{ flexWrap: "wrap", gap: "8px" }}>
-            <h2>🚨 Incidents <span className="attention-count" style={{ background: "var(--bo-primary)" }}>{totalElements}</span></h2>
+            <h2><Siren size={16} className="panel-title-icon" /> Incidents <span className="attention-count" style={{ background: "var(--bo-primary)" }}>{totalElements}</span></h2>
             <div className="panel-header-actions" style={{ flexWrap: "wrap", gap: "8px" }}>
 
               <div className="cascade-group">
@@ -271,13 +272,13 @@ function IncidentsHistoriquePage() {
 
               {aDesFiltres && (
                 <button className="btn-outline" onClick={effacerFiltres} style={{ alignSelf: "flex-end" }}>
-                  ✕ Effacer
+                  <X size={13} /> Effacer
                 </button>
               )}
 
               <button className="btn-primary" onClick={exporter} disabled={exportEnCours}
                 style={{ alignSelf: "flex-end" }}>
-                {exportEnCours ? "Export..." : "⬇ Exporter (CSV)"}
+                {exportEnCours ? "Export..." : <><Download size={13} /> Exporter (CSV)</>}
               </button>
             </div>
           </div>
@@ -335,7 +336,7 @@ function IncidentsHistoriquePage() {
                 </div>
                 <div className="pagination-controls">
                   <button className="pagination-btn" onClick={() => setPage((p) => p - 1)} disabled={pageAffichee === 1}>
-                    ← Précédent
+                    <ChevronLeft size={13} /> Précédent
                   </button>
                   {numerosPagesAffiches().map((n, idx) =>
                     n === "..." ? (
@@ -346,7 +347,7 @@ function IncidentsHistoriquePage() {
                     )
                   )}
                   <button className="pagination-btn" onClick={() => setPage((p) => p + 1)} disabled={pageAffichee === totalPages}>
-                    Suivant →
+                    Suivant <ChevronRight size={13} />
                   </button>
                 </div>
               </div>

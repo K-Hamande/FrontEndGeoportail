@@ -1,4 +1,8 @@
 import { useEffect, useState } from "react";
+import {
+  Menu, Plug, X, Save, Wifi, Network, Router, ArrowRightLeft, Signal,
+  BatteryCharging, Server, TowerControl, Settings, RefreshCw, ChevronLeft, ChevronRight,
+} from "lucide-react";
 import { useAuth } from "../shared/AuthContext";
 import { adminGet, adminPost, adminPut } from "../shared/backofficeApiClient";
 import { useOutletContext } from "react-router-dom";
@@ -14,9 +18,9 @@ const TYPE_LABELS = {
 };
 
 const TYPE_ICONS = {
-  BORNE_WIFI: "📡", COMMUTATEUR: "🔀", ROUTEUR: "🌐",
-  PTP: "↔️", PMP: "📶", CPE: "🔌",
-  ONDULEUR: "🔋", SERVEUR: "🖥️", PYLONE: "🗼", AUTRE: "⚙️",
+  BORNE_WIFI: Wifi, COMMUTATEUR: Network, ROUTEUR: Router,
+  PTP: ArrowRightLeft, PMP: Signal, CPE: Plug,
+  ONDULEUR: BatteryCharging, SERVEUR: Server, PYLONE: TowerControl, AUTRE: Settings,
 };
 
 const TYPE_COLORS = {
@@ -256,7 +260,7 @@ function EquipmentsPage() {
   return (
     <>
       <div className="dashboard-topbar">
-        <button className="topbar-collapse-btn" onClick={() => setReduit(!reduit)}>☰</button>
+        <button className="topbar-collapse-btn" onClick={() => setReduit(!reduit)}><Menu size={18} /></button>
         <div className="topbar-titles">
           <h1 className="topbar-title-welcome">Équipements réseau</h1>
           <p className="topbar-subtitle">{stats?.totalGlobal ?? "..."} équipements synchronisés sur {stats?.regions?.length ?? 0} régions</p>
@@ -264,7 +268,7 @@ function EquipmentsPage() {
         <div className="topbar-actions">
           <button className="btn-primary" disabled={synchronisation} onClick={synchroniser}
             style={{ padding: "8px 16px", borderRadius: "10px", fontSize: "12px" }}>
-            {synchronisation ? "Synchronisation…" : "⟳ Synchroniser NetXMS"}
+            {synchronisation ? "Synchronisation…" : <><RefreshCw size={13} /> Synchroniser NetXMS</>}
           </button>
           <div className="topbar-user">
             <div className="topbar-user-avatar">{initiales}</div>
@@ -285,7 +289,9 @@ function EquipmentsPage() {
           <div className="eq-stats-section">
             <h2 className="eq-stats-title">Répartition par type d'équipement</h2>
             <div className="eq-stats-grid">
-              {stats.parType.map((s) => (
+              {stats.parType.map((s) => {
+                const TypeIcone = TYPE_ICONS[s.type] || Settings;
+                return (
                 <div key={s.type} className="eq-stat-card"
                   onClick={() => setFiltreType(filtreType === s.type ? "" : s.type)}
                   style={{
@@ -293,7 +299,7 @@ function EquipmentsPage() {
                     cursor: "pointer",
                     background: filtreType === s.type ? "#F0F4FB" : "white",
                   }}>
-                  <div className="eq-stat-icon">{TYPE_ICONS[s.type] || "⚙️"}</div>
+                  <div className="eq-stat-icon"><TypeIcone size={20} /></div>
                   <div style={{ flex: 1 }}>
                     <div className="eq-stat-label">{s.libelle}</div>
                     <div className="eq-stat-value">{s.count.toLocaleString("fr-FR")}</div>
@@ -304,7 +310,8 @@ function EquipmentsPage() {
                     <div className="eq-stat-pct">{s.pourcentage}%</div>
                   </div>
                 </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         )}
@@ -312,7 +319,7 @@ function EquipmentsPage() {
         {/* Filtres en cascade */}
         <div className="panel">
           <div className="panel-header" style={{ flexWrap: "wrap", gap: "8px" }}>
-            <h2>🔌 Équipements <span className="attention-count" style={{ background: "var(--bo-primary)" }}>{equipements.length}</span></h2>
+            <h2><Plug size={16} className="panel-title-icon" /> Équipements <span className="attention-count" style={{ background: "var(--bo-primary)" }}>{equipements.length}</span></h2>
             <div className="panel-header-actions" style={{ flexWrap: "wrap", gap: "8px" }}>
 
               {/* Cascade géographique */}
@@ -369,7 +376,7 @@ function EquipmentsPage() {
 
               {aDesFiltres && (
                 <button className="btn-outline" onClick={effacerFiltres}
-                  style={{ alignSelf: "flex-end" }}>✕ Effacer</button>
+                  style={{ alignSelf: "flex-end" }}><X size={13} /> Effacer</button>
               )}
             </div>
           </div>
@@ -390,12 +397,14 @@ function EquipmentsPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {equipementsPage.map((eq) => (
+                  {equipementsPage.map((eq) => {
+                    const TypeIcone = TYPE_ICONS[eq.type] || Settings;
+                    return (
                     <tr key={eq.id}>
                       <td>
                         <span className="eq-type-badge"
                           style={{ background: (TYPE_COLORS[eq.type] || "#6B7280") + "20", color: TYPE_COLORS[eq.type] || "#6B7280" }}>
-                          {TYPE_ICONS[eq.type] || "⚙️"} {TYPE_LABELS[eq.type] || eq.type}
+                          <TypeIcone size={13} /> {TYPE_LABELS[eq.type] || eq.type}
                         </span>
                       </td>
                       <td className="alerte-cell">{eq.nomTechniqueNetxms}</td>
@@ -414,11 +423,12 @@ function EquipmentsPage() {
                       <td className="alerte-cell">{eq.siteId}</td>
                       <td>
                         <button className="btn-voir" disabled={!aChange(eq)} onClick={() => enregistrer(eq.id)}>
-                          💾 Enregistrer
+                          <Save size={13} /> Enregistrer
                         </button>
                       </td>
                     </tr>
-                  ))}
+                    );
+                  })}
                 </tbody>
               </table>
 
@@ -427,7 +437,7 @@ function EquipmentsPage() {
                   Affichage de <strong>{debut + 1}</strong> à <strong>{Math.min(debut + TAILLE_PAGE, equipements.length)}</strong> sur <strong>{equipements.length}</strong>
                 </div>
                 <div className="pagination-controls">
-                  <button className="pagination-btn" onClick={() => setPageCourante(pageActuelle - 1)} disabled={pageActuelle === 1}>← Précédent</button>
+                  <button className="pagination-btn" onClick={() => setPageCourante(pageActuelle - 1)} disabled={pageActuelle === 1}><ChevronLeft size={13} /> Précédent</button>
                   {numerosPagesAffiches().map((n, idx) =>
                     n === "..." ? (
                       <span key={`e${idx}`} className="pagination-ellipsis">…</span>
@@ -436,7 +446,7 @@ function EquipmentsPage() {
                         onClick={() => setPageCourante(n)}>{n}</button>
                     )
                   )}
-                  <button className="pagination-btn" onClick={() => setPageCourante(pageActuelle + 1)} disabled={pageActuelle === totalPages}>Suivant →</button>
+                  <button className="pagination-btn" onClick={() => setPageCourante(pageActuelle + 1)} disabled={pageActuelle === totalPages}>Suivant <ChevronRight size={13} /></button>
                 </div>
               </div>
             </>

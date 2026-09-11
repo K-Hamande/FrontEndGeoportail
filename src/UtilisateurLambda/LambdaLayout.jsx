@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { KeyRound, LogOut } from "lucide-react";
 import { estConnecteDecideur, getDecideurAuth, clearDecideurAuth } from "../shared/decideurAuth";
 
 function LambdaLayout({ children }) {
@@ -30,12 +31,12 @@ function LambdaLayout({ children }) {
           {connecte ? (
             <div className="lambda-user">
               <span className="lambda-user-name">{auth?.role}</span>
-              <button className="lambda-logout" onClick={logout} title="Se déconnecter">⏻</button>
+              <button className="lambda-logout" onClick={logout} title="Se déconnecter"><LogOut size={15} /></button>
             </div>
           ) : (
             <nav className="lambda-nav">
               <button className="lambda-nav-btn" onClick={() => navigate("/login")}>
-                🔑 Connexion décideur
+                <KeyRound size={14} /> Connexion décideur
               </button>
             </nav>
           )}
